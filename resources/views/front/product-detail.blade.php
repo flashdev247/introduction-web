@@ -2291,4 +2291,6 @@
     </div>
   </div>
 </div>
-    </div></body></html>
+    </div>
+    <script src="/js/shop.js"></script>
+</body></html>

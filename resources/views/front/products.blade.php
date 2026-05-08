@@ -1352,13 +1352,18 @@
             @php
               $image = $product->first_image;
               $imageUrl = $image ? (\Illuminate\Support\Str::startsWith($image, ['http://', 'https://', '/']) ? $image : asset('storage/' . $image)) : asset('assets/shop/ulihu-charcoal-silk-linen-tunic_0326-v1-FINAL-copy.jpg');
+              $hoverImage = $product->images[1] ?? null;
+              $hoverImageUrl = $hoverImage ? (\Illuminate\Support\Str::startsWith($hoverImage, ['http://', 'https://', '/']) ? $hoverImage : asset('storage/' . $hoverImage)) : null;
             @endphp
             <div class="product-list-item is-loaded" data-product-id="{{ $product->id }}">
   <a class="product-list-item-link" href="{{ route('products.show', $product->slug) }}" aria-label="{{ $product->name }}">
     <div class="product-list-image-wrapper">
       <figure class="product-list-item-image" data-animation-role="image" data-test="plp-grid-image">
   <div class="grid-image-wrapper">
-<img data-src="{{ $imageUrl }}" data-image="{{ $imageUrl }}" alt="{{ $product->name }}" data-load="false" elementtiming="nbf-products-list-main" data-image-id="{{ $product->id }}" src="{{ $imageUrl }}" width="1600" height="1600" sizes="(max-width: 767px) calc((88vw - 1 * 30px) / 2 / 0.7504587155963303 * 1), calc((100vw - 2 * 4vw - 3 * 2vw) / 4 / 0.7504587155963303 * 1)" class="grid-item-image grid-image-cover" style="object-position: 50% 50%; display: block;" fetchpriority="low" loading="lazy" decoding="async" data-loader="sqs">
+<img data-src="{{ $imageUrl }}" data-image="{{ $imageUrl }}" alt="{{ $product->name }}" data-load="false" elementtiming="nbf-products-list-main" data-image-id="{{ $product->id }}" src="{{ $imageUrl }}" width="1600" height="1600" sizes="(max-width: 767px) calc((88vw - 1 * 30px) / 2 / 0.7504587155963303 * 1), calc((100vw - 2 * 4vw - 3 * 2vw) / 4 / 0.7504587155963303 * 1)" class="grid-item-image grid-image-cover product-list-primary-image" style="object-position: 50% 50%; display: block;" fetchpriority="low" loading="lazy" decoding="async" data-loader="sqs">
+@if($hoverImageUrl)
+<img data-src="{{ $hoverImageUrl }}" data-image="{{ $hoverImageUrl }}" alt="{{ $product->name }}" src="{{ $hoverImageUrl }}" width="1600" height="1600" sizes="(max-width: 767px) calc((88vw - 1 * 30px) / 2 / 0.7504587155963303 * 1), calc((100vw - 2 * 4vw - 3 * 2vw) / 4 / 0.7504587155963303 * 1)" class="grid-item-image grid-image-cover product-list-hover-image" style="object-position: 50% 50%; display: block;" fetchpriority="low" loading="lazy" decoding="async">
+@endif
   </div>
 </figure>
     </div>
@@ -2132,4 +2137,6 @@
 
   
 
-<div id="yui3-css-stamp" style="position: absolute !important; visibility: hidden !important"></div></body></html>
+<div id="yui3-css-stamp" style="position: absolute !important; visibility: hidden !important"></div>
+    <script src="/js/shop.js"></script>
+</body></html>
