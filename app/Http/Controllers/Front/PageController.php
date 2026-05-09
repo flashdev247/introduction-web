@@ -5,15 +5,29 @@ namespace App\Http\Controllers\Front;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\ContactMessage;
-use App\Models\ContactSetting;
+use App\Models\Setting;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
 class PageController extends Controller
 {
+    private function getSettings()
+    {
+        return (object) [
+            'site_name' => Setting::get('site_name', 'Your Site Title'),
+            'logo' => Setting::get('logo', ''),
+            'email' => Setting::get('email', ''),
+            'phone' => Setting::get('phone', ''),
+            'zalo' => Setting::get('zalo', ''),
+            'hotline' => Setting::get('hotline', ''),
+            'address' => Setting::get('address', ''),
+            'contact_info' => Setting::get('contact_info', ''),
+        ];
+    }
+
     public function home()
     {
-        $settings = ContactSetting::first();
+        $settings = $this->getSettings();
         $featuredProducts = Product::where('is_active', true)->where('is_featured', true)->take(6)->get();
 
         return view('front.home', compact('settings', 'featuredProducts'));
@@ -21,7 +35,7 @@ class PageController extends Controller
 
     public function products()
     {
-        $settings = ContactSetting::first();
+        $settings = $this->getSettings();
         $products = Product::with('category')->where('is_active', true)->latest()->get();
         $categories = Category::all();
         $currentCategory = null;
@@ -29,39 +43,23 @@ class PageController extends Controller
         return view('front.products', compact('settings', 'products', 'categories', 'currentCategory'));
     }
 
-    public function productsCategoryOrDetail(string $slug)
-    {
-        $settings = ContactSetting::first();
-
-        // Check if slug matches a category
-        $category = Category::where('slug', $slug)->first();
-        if ($category) {
-            $products = Product::with('category')->where('is_active', true)->where('category_id', $category->id)->latest()->get();
-            $categories = Category::all();
-            $currentCategory = $category;
-            return view('front.products', compact('settings', 'products', 'categories', 'currentCategory'));
-        }
-
-        // Otherwise treat as product slug
-        $product = Product::with('category')->where('slug', $slug)->where('is_active', true)->firstOrFail();
-        return view('front.product-detail', compact('settings', 'product'));
-    }
+    // removed combined slug handler; categories are filtered via query params
 
     public function productsByCategory(string $category)
     {
-        return redirect()->route('products.show', ['slug' => $category], 301);
+        return redirect()->route('products.index', ['category' => $category], 301);
     }
 
-    public function productDetail(string $slug)
+    public function productDetail(int $id)
     {
-        $settings = ContactSetting::first();
-        $product = Product::with('category')->where('slug', $slug)->where('is_active', true)->firstOrFail();
+        $settings = $this->getSettings();
+        $product = Product::with('category')->where('id', $id)->where('is_active', true)->firstOrFail();
         return view('front.product-detail', compact('settings', 'product'));
     }
 
     public function contact()
     {
-        $settings = ContactSetting::first();
+        $settings = $this->getSettings();
 
         return view('front.contact', compact('settings'));
     }

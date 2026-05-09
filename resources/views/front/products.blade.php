@@ -13,30 +13,30 @@
 <section class="section" style="padding-top:0">
     <div class="container">
         @if(isset($categories) && $categories->count() > 0)
-            <div class="filters">
-                <a class="filter {{ request('category') ? '' : 'active' }}" href="{{ route('products.index') }}">All</a>
-                @foreach($categories as $category)
-                    <a class="filter {{ request('category') === $category->slug ? 'active' : '' }}" href="{{ route('products.index', ['category' => $category->slug]) }}">
-                        {{ $category->name }}
-                    </a>
-                @endforeach
-            </div>
+        <div class="filters">
+            <a class="filter {{ request('category') ? '' : 'active' }}" href="{{ route('products.index') }}">All</a>
+            @foreach($categories as $category)
+            <a class="filter {{ request('category') == $category->id ? 'active' : '' }}" href="{{ route('products.index', ['category' => $category->id]) }}">
+                {{ $category->name }}
+            </a>
+            @endforeach
+        </div>
         @endif
 
         @if($products && $products->count() > 0)
-            <div class="grid">
-                @foreach($products as $product)
-                    @include('components.front.product-card', ['product' => $product])
-                @endforeach
-            </div>
+        <div class="grid">
+            @foreach($products as $product)
+            @include('components.front.product-card', ['product' => $product])
+            @endforeach
+        </div>
 
-            @if(method_exists($products, 'links'))
-                <div style="margin-top:32px">
-                    {{ $products->links() }}
-                </div>
-            @endif
+        @if(method_exists($products, 'links'))
+        <div style="margin-top:32px">
+            {{ $products->links() }}
+        </div>
+        @endif
         @else
-            <p class="muted">No products found.</p>
+        <p class="muted">No products found.</p>
         @endif
     </div>
 </section>

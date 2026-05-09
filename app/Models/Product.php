@@ -8,9 +8,13 @@ use Illuminate\Support\Str;
 class Product extends Model
 {
     protected $fillable = [
-        'category_id', 'name', 'slug', 'sku', 'price',
-        'short_description', 'description', 'images',
-        'is_featured', 'is_active',
+        'category_id',
+        'name',
+        'price',
+        'description',
+        'images',
+        'is_featured',
+        'is_active',
     ];
 
     protected $casts = [
@@ -20,14 +24,7 @@ class Product extends Model
         'price' => 'decimal:2',
     ];
 
-    protected static function booted(): void
-    {
-        static::creating(function (self $product) {
-            if (empty($product->slug)) {
-                $product->slug = Str::slug($product->name);
-            }
-        });
-    }
+    // slugs removed — no boot logic
 
     public function category()
     {

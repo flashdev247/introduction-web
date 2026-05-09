@@ -8,37 +8,37 @@
         <div class="gallery">
             @php $images = $product->images ?? []; @endphp
             @if(count($images) > 0)
-                <div style="position:relative">
-                    <img id="galleryMain" class="gallery__main" src="{{ $images[0] }}" alt="{{ $product->name }}">
-                    @if(count($images) > 1)
-                        <button type="button" class="gallery__nav gallery__nav--prev" onclick="galleryNav(-1)">&#8592;</button>
-                        <button type="button" class="gallery__nav gallery__nav--next" onclick="galleryNav(1)">&#8594;</button>
-                    @endif
-                </div>
+            <div style="position:relative">
+                <img id="galleryMain" class="gallery__main" src="{{ $images[0] }}" alt="{{ $product->name }}">
                 @if(count($images) > 1)
-                    <div class="gallery__thumbs">
-                        @foreach($images as $i => $img)
-                            <img class="gallery__thumb {{ $i === 0 ? 'active' : '' }}" src="{{ $img }}" alt="{{ $product->name }}" onclick="gallerySelect({{ $i }})">
-                        @endforeach
-                    </div>
+                <button type="button" class="gallery__nav gallery__nav--prev" onclick="galleryNav(-1)">&#8592;</button>
+                <button type="button" class="gallery__nav gallery__nav--next" onclick="galleryNav(1)">&#8594;</button>
                 @endif
+            </div>
+            @if(count($images) > 1)
+            <div class="gallery__thumbs">
+                @foreach($images as $i => $img)
+                <img class="gallery__thumb {{ $i === 0 ? 'active' : '' }}" src="{{ $img }}" alt="{{ $product->name }}" onclick="gallerySelect({{ $i }})">
+                @endforeach
+            </div>
+            @endif
             @else
-                <div class="gallery__main" style="display:grid;place-items:center;min-height:400px;color:var(--muted)">No image</div>
+            <div class="gallery__main" style="display:grid;place-items:center;min-height:400px;color:var(--muted)">No image</div>
             @endif
         </div>
 
         <div>
             @if($product->category)
-                <p class="product-card__category">{{ $product->category->name }}</p>
+            <p class="product-card__category">{{ $product->category->name }}</p>
             @endif
             <h1>{{ $product->name }}</h1>
             @if($product->formatted_price)
-                <p class="detail-price">{{ $product->formatted_price }}</p>
+            <p class="detail-price">{{ $product->formatted_price }}</p>
             @endif
             @if($product->description)
-                <div class="content">
-                    {!! $product->description !!}
-                </div>
+            <div class="content" style="margin-top:18px; color: #2d3748; line-height:1.7;">
+                {!! $product->description !!}
+            </div>
             @endif
         </div>
     </div>
@@ -47,7 +47,7 @@
 
 @push('scripts')
 <script>
-    (function(){
+    (function() {
         const images = @json($images ?? []);
         let current = 0;
         const mainImg = document.getElementById('galleryMain');

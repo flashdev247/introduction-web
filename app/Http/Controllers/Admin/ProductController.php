@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -48,19 +49,32 @@ class ProductController extends Controller
         $data = $request->validate([
             'category_id' => ['nullable', 'exists:categories,id'],
             'name' => ['required', 'string', 'max:255'],
-            'slug' => ['nullable', 'string', 'max:255'],
-            'sku' => ['nullable', 'string', 'max:255'],
             'price' => ['nullable', 'numeric'],
-            'short_description' => ['nullable', 'string'],
+            'description' => ['nullable', 'string'],
             'description' => ['nullable', 'string'],
             'images_text' => ['nullable', 'string'],
+            'images_upload' => ['nullable', 'array'],
+            'images_upload.*' => ['nullable', 'image', 'max:5120'],
             'is_featured' => ['nullable', 'boolean'],
             'is_active' => ['nullable', 'boolean'],
         ]);
 
-        $data['slug'] = $data['slug'] ?: Str::slug($data['name']);
-        $data['images'] = collect(preg_split('/\r\n|\r|\n/', $data['images_text'] ?? ''))->filter()->values()->all();
+        // Process images from text input (URLs)
+        $images = collect(preg_split('/\r\n|\r|\n/', $data['images_text'] ?? ''))->filter()->values()->all();
+
+        // Process uploaded images
+        if ($request->hasFile('images_upload')) {
+            foreach ($request->file('images_upload') as $file) {
+                if ($file->isValid()) {
+                    $path = $file->store('products', 'public');
+                    $images[] = '/storage/' . $path;
+                }
+            }
+        }
+
+        $data['images'] = $images;
         unset($data['images_text']);
+        unset($data['images_upload']);
         $data['is_featured'] = $request->boolean('is_featured');
         $data['is_active'] = $request->boolean('is_active');
 

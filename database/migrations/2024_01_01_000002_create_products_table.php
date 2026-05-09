@@ -12,10 +12,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('category_id')->nullable()->constrained()->nullOnDelete();
             $table->string('name');
-            $table->string('slug')->unique();
-            $table->string('sku')->nullable();
+            // slug and sku removed per request
             $table->decimal('price', 12, 2)->nullable();
-            $table->text('short_description')->nullable();
+            // short_description removed per request
             $table->longText('description')->nullable();
             $table->json('images')->nullable();
             $table->boolean('is_featured')->default(false);
