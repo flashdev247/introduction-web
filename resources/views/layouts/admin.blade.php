@@ -17,6 +17,10 @@
         <a href="{{ route('admin.categories.index') }}">Categories</a>
         <a href="{{ route('admin.settings.edit') }}">Contact Settings</a>
         <a href="{{ route('home') }}">View site</a>
+        <form method="post" action="{{ route('admin.logout') }}" style="margin-top:20px">
+            @csrf
+            <button class="btn btn-light" type="submit">Logout</button>
+        </form>
     </aside>
     <main class="main">
         @if(session('success'))<div class="ok">{{ session('success') }}</div>@endif

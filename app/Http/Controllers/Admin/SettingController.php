@@ -22,6 +22,8 @@ class SettingController extends Controller
             'logo' => ['nullable', 'string', 'max:255'],
             'email' => ['nullable', 'email', 'max:255'],
             'phone' => ['nullable', 'string', 'max:255'],
+            'zalo' => ['nullable', 'string', 'max:255'],
+            'hotline' => ['nullable', 'string', 'max:255'],
             'address' => ['nullable', 'string', 'max:255'],
             'contact_info' => ['nullable', 'string'],
         ]));
