@@ -32,6 +32,11 @@
         <div class="stat-content">
             <h4>Contact Messages</h4>
             <strong>{{ $messagesCount }}</strong>
+            @if($unreadMessagesCount > 0)
+            <span style="color: #f56565; font-size: 14px; font-weight: 600; margin-left: 8px;">
+                ({{ $unreadMessagesCount }} unread)
+            </span>
+            @endif
         </div>
     </div>
 </div>

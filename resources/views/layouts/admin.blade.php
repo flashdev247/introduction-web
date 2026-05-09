@@ -507,6 +507,12 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{ route('admin.messages.index') }}" @class(['active'=> request()->routeIs('admin.messages.*')])>
+                        <i class="fas fa-envelope"></i>
+                        Messages
+                    </a>
+                </li>
+                <li>
                     <a href="{{ route('admin.settings.edit') }}" @class(['active'=> request()->routeIs('admin.settings.*')])>
                         <i class="fas fa-cog"></i>
                         Settings
@@ -536,7 +542,7 @@
             <!-- Header -->
             <header class="admin-header">
                 <div class="header-left">
-                    <h1>Dashboard</h1>
+                    <h1>@yield('header_title', 'Dashboard')</h1>
                 </div>
             </header>
 

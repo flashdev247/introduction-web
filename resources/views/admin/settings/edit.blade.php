@@ -21,16 +21,6 @@
         </div>
 
         <div class="form-group">
-            <label>Logo (URL/Path)</label>
-            <input
-                type="text"
-                name="logo"
-                value="{{ old('logo', $settings['logo'] ?? '') }}"
-                placeholder="https://example.com/logo.png">
-            @error('logo')<span style="color: #e53e3e; font-size: 13px;">{{ $message }}</span>@enderror
-        </div>
-
-        <div class="form-group">
             <label>Email Address</label>
             <input
                 type="email"

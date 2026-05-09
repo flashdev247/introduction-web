@@ -15,6 +15,7 @@ class DashboardController extends Controller
             'productsCount' => Product::count(),
             'categoriesCount' => Category::count(),
             'messagesCount' => ContactMessage::count(),
+            'unreadMessagesCount' => ContactMessage::where('is_read', false)->count(),
         ]);
     }
 }

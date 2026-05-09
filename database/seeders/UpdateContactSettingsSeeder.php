@@ -14,6 +14,9 @@ class UpdateContactSettingsSeeder extends Seeder
             'zalo' => '84901234567',
             'hotline' => '0901234567',
             'phone' => '0901234567',
+            'email' => 'contact@shoppingonline.com',
+            'address' => '123 Main Street, City, Country',
+            'contact_info' => 'Feel free to reach out to us via email or phone.'
         ];
 
         foreach ($settings as $key => $value) {

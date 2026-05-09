@@ -1,4 +1,5 @@
 @extends('layouts.admin')
+@section('header_title', 'Products')
 @section('content')
 <div class="page-header">
     <h1><i class="fas fa-box"></i> Products</h1>

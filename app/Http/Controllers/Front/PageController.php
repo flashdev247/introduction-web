@@ -33,10 +33,17 @@ class PageController extends Controller
         return view('front.home', compact('settings', 'featuredProducts'));
     }
 
-    public function products()
+    public function products(Request $request)
     {
         $settings = $this->getSettings();
-        $products = Product::with('category')->where('is_active', true)->latest()->get();
+        $categoryId = $request->query('category');
+        $query = Product::with('category')->where('is_active', true)->latest();
+
+        if ($categoryId) {
+            $query->where('category_id', $categoryId);
+        }
+
+        $products = $query->get();
         $categories = Category::all();
         $currentCategory = null;
 
