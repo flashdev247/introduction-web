@@ -253,8 +253,8 @@
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 28px
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px
         }
 
         .product-card {
@@ -301,20 +301,20 @@
         }
 
         .product-card__body {
-            padding: 18px
+            padding: 12px
         }
 
         .product-card__category {
-            font-size: 12px;
+            font-size: 11px;
             text-transform: uppercase;
             letter-spacing: .1em;
             color: var(--accent)
         }
 
         .product-card h3 {
-            font-size: 18px;
+            font-size: 14px;
             line-height: 1.3;
-            margin: 8px 0
+            margin: 6px 0
         }
 
         .product-card__price {
