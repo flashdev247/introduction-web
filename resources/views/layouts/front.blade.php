@@ -58,17 +58,34 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 24px
+            gap: 24px;
+            position: relative
         }
 
         .brand {
             font-weight: 800;
             letter-spacing: .18em;
-            font-size: 22px
+            font-size: 22px;
+            flex: 1
         }
 
         .brand img {
             max-height: 42px
+        }
+
+        .nav-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: 600;
+            font-size: 20px
+        }
+
+        .nav-end {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-left: auto
         }
 
         .menu {
@@ -88,6 +105,32 @@
             color: var(--accent)
         }
 
+        .social-icons {
+            display: flex;
+            align-items: center;
+            gap: 20px
+        }
+
+        .social-icons a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            color: var(--muted);
+            transition: color .2s
+        }
+
+        .social-icons a:hover {
+            color: var(--dark)
+        }
+
+        .social-icons svg {
+            width: 100%;
+            height: 100%;
+            fill: currentColor
+        }
+
         .hero {
             min-height: 520px;
             display: grid;
@@ -97,6 +140,63 @@
             background-size: cover;
             background-position: center;
             color: white
+        }
+
+        .hero-section {
+            padding: 80px 0;
+            background: #fefdfb
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center
+        }
+
+        .hero-text h1 {
+            font-size: 48px;
+            line-height: 1.2;
+            margin: 0 0 32px;
+            letter-spacing: 0
+        }
+
+        .hero-text p {
+            font-size: 18px;
+            color: var(--muted);
+            margin: 0;
+            line-height: 1.6
+        }
+
+        .hero-image {
+            display: flex;
+            justify-content: flex-end
+        }
+
+        .hero-image img {
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .1);
+            max-height: 500px;
+            object-fit: cover
+        }
+
+        @media (max-width: 768px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 40px
+            }
+
+            .hero-text h1 {
+                font-size: 36px
+            }
+
+            .hero-image {
+                justify-content: center
+            }
+
+            .hero-image img {
+                max-height: 400px
+            }
         }
 
         .hero h1 {
@@ -508,23 +608,35 @@
 <body>
     <header class="site-header">
         <div class="container nav">
-            <a class="brand" href="{{ route('home') }}">
-                @if(!empty($settings?->logo))
-                <img src="{{ $settings->logo }}" alt="{{ $settings->site_name ?? 'ULIHU' }}">
-                @else
-                {{ $settings->site_name ?? 'ULIHU' }}
-                @endif
-            </a>
             <nav class="menu" aria-label="Main navigation">
                 <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">Home</a>
-                <a href="{{ route('products.index') }}" class="{{ request()->routeIs('products.*') ? 'active' : '' }}">Products</a>
+                <a href="{{ route('products.index') }}" class="{{ request()->routeIs('products.*') ? 'active' : '' }}">Shop</a>
                 <a href="{{ route('contact') }}" class="{{ request()->routeIs('contact') ? 'active' : '' }}">Contact</a>
-                @auth
-                @if(auth()->user()->role === 'admin')
-                <a href="{{ route('admin.dashboard') }}">Admin</a>
-                @endif
-                @endauth
             </nav>
+
+            <div class="nav-center">
+                @if(!empty($settings?->logo))
+                <img src="{{ $settings->logo }}" alt="{{ $settings->site_name ?? 'ULIHU' }}" style="max-height: 24px;">
+                @else
+                {{ $settings->site_name ?? 'Your Site Title' }}
+                @endif
+            </div>
+
+            <div class="nav-end">
+                <div class="social-icons">
+                    <a href="#" title="Instagram" aria-label="Instagram">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073z" />
+                            <circle cx="12" cy="12" r="3.6" />
+                        </svg>
+                    </a>
+                    <a href="#" title="Twitter" aria-label="Twitter">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2s9 5 20 5a9.5 9.5 0 00-9-5.5c4.75 2.25 7-7 7-7z" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
         </div>
     </header>
 

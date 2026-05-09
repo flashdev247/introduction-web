@@ -3,11 +3,15 @@
 @section('title', ($settings->site_name ?? 'ULIHU') . ' — Home')
 
 @section('content')
-<section class="hero">
-    <div>
-        <h1>{{ $settings->site_name ?? 'ULIHU' }}</h1>
-        <p>{{ $settings->site_description ?? 'Timeless elegance, crafted with care' }}</p>
-        <a href="{{ route('products.index') }}" class="btn">Shop Now</a>
+<section class="hero-section">
+    <div class="container hero-content">
+        <div class="hero-text">
+            <h1>Explore Our<br />Packages</h1>
+            <p>Discover our premium selection of packages designed to meet your needs.</p>
+        </div>
+        <div class="hero-image">
+            <img src="{{ asset('assets/home/hero-banner.png') }}" alt="Lamp with flower">
+        </div>
     </div>
 </section>
 
@@ -20,7 +24,7 @@
         </div>
         <div class="grid">
             @foreach($featuredProducts as $product)
-                @include('components.front.product-card', ['product' => $product])
+            @include('components.front.product-card', ['product' => $product])
             @endforeach
         </div>
     </div>
