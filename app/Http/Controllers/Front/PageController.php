@@ -14,12 +14,12 @@ class PageController extends Controller
     private function getSettings()
     {
         return (object) [
-            'site_name' => Setting::get('site_name', 'Your Site Title'),
+            'site_name' => Setting::get('site_name', 'HTTM VIETNAM'),
             'logo' => Setting::get('logo', ''),
             'email' => Setting::get('email', ''),
             'phone' => Setting::get('phone', ''),
             'zalo' => Setting::get('zalo', ''),
-            'hotline' => Setting::get('hotline', ''),
+            'shopee' => Setting::get('shopee', ''),
             'address' => Setting::get('address', ''),
             'contact_info' => Setting::get('contact_info', ''),
         ];

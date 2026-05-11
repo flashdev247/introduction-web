@@ -3,7 +3,11 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin Login</title>
+    <title>Đăng nhập quản trị</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="/assets/images/favicon_io/site.webmanifest">
     <style>
         body{font-family:Arial,sans-serif;background:#f6f6f3;margin:0;color:#222;min-height:100vh;display:grid;place-items:center}
         .card{width:min(420px,calc(100% - 32px));background:#fff;border:1px solid #ddd;padding:32px}
@@ -15,7 +19,7 @@
 <body>
     <form class="card" method="post" action="{{ route('admin.login.submit') }}">
         @csrf
-        <h1>Admin Login</h1>
+        <h1>Đăng nhập quản trị</h1>
 
         @if($errors->any())
             <div class="err">{{ $errors->first() }}</div>
@@ -25,17 +29,17 @@
             <input type="email" name="email" value="{{ old('email') }}" required autofocus>
         </label>
 
-        <label>Password
+        <label>Mật khẩu
             <input type="password" name="password" required>
         </label>
 
         <label class="row">
             <input type="checkbox" name="remember" value="1">
-            <span>Remember me</span>
+            <span>Ghi nhớ đăng nhập</span>
         </label>
 
-        <button class="btn" type="submit">Login</button>
-        <a href="{{ route('home') }}" style="margin-left:12px">Back to site</a>
+        <button class="btn" type="submit">Đăng nhập</button>
+        <a href="{{ route('home') }}" style="margin-left:12px">Quay lại website</a>
     </form>
 </body>
 </html>

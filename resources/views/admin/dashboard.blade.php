@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 @section('content')
 <div class="page-header">
-    <h1><i class="fas fa-chart-line"></i> Dashboard</h1>
+    <h1><i class="fas fa-chart-line"></i> Bảng điều khiển</h1>
 </div>
 
 <div class="stats-grid">
@@ -10,7 +10,7 @@
             <i class="fas fa-box"></i>
         </div>
         <div class="stat-content">
-            <h4>Total Products</h4>
+            <h4>Tổng sản phẩm</h4>
             <strong>{{ $productsCount }}</strong>
         </div>
     </div>
@@ -20,7 +20,7 @@
             <i class="fas fa-folder-open"></i>
         </div>
         <div class="stat-content">
-            <h4>Total Categories</h4>
+            <h4>Tổng danh mục</h4>
             <strong>{{ $categoriesCount }}</strong>
         </div>
     </div>
@@ -30,11 +30,11 @@
             <i class="fas fa-envelope"></i>
         </div>
         <div class="stat-content">
-            <h4>Contact Messages</h4>
+            <h4>Tin nhắn liên hệ</h4>
             <strong>{{ $messagesCount }}</strong>
             @if($unreadMessagesCount > 0)
             <span style="color: #f56565; font-size: 14px; font-weight: 600; margin-left: 8px;">
-                ({{ $unreadMessagesCount }} unread)
+                ({{ $unreadMessagesCount }} chưa đọc)
             </span>
             @endif
         </div>

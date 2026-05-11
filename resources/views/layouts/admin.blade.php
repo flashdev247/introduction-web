@@ -4,8 +4,12 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin Panel</title>
+    <title>Trang quản trị</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="/assets/images/favicon_io/site.webmanifest">
     <style>
         * {
             margin: 0;
@@ -484,44 +488,44 @@
         <aside class="sidebar">
             <div class="sidebar-header">
                 <i class="fas fa-layer-group"></i>
-                <h2>Admin Panel</h2>
+                <h2>Trang quản trị</h2>
             </div>
 
             <ul class="sidebar-menu">
                 <li>
                     <a href="{{ route('admin.dashboard') }}" @class(['active'=> request()->routeIs('admin.dashboard')])>
                         <i class="fas fa-chart-line"></i>
-                        Dashboard
+                        Bảng điều khiển
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('admin.products.index') }}" @class(['active'=> request()->routeIs('admin.products.*')])>
                         <i class="fas fa-box"></i>
-                        Products
+                        Sản phẩm
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('admin.categories.index') }}" @class(['active'=> request()->routeIs('admin.categories.*')])>
                         <i class="fas fa-folder-open"></i>
-                        Categories
+                        Danh mục
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('admin.messages.index') }}" @class(['active'=> request()->routeIs('admin.messages.*')])>
                         <i class="fas fa-envelope"></i>
-                        Messages
+                        Tin nhắn
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('admin.settings.edit') }}" @class(['active'=> request()->routeIs('admin.settings.*')])>
                         <i class="fas fa-cog"></i>
-                        Settings
+                        Cài đặt
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('home') }}">
                         <i class="fas fa-eye"></i>
-                        View Site
+                        Xem website
                     </a>
                 </li>
             </ul>
@@ -531,7 +535,7 @@
                     @csrf
                     <button class="logout-btn" type="submit">
                         <i class="fas fa-sign-out-alt"></i>
-                        Logout
+                        Đăng xuất
                     </button>
                 </form>
             </div>
@@ -542,7 +546,7 @@
             <!-- Header -->
             <header class="admin-header">
                 <div class="header-left">
-                    <h1>@yield('header_title', 'Dashboard')</h1>
+                    <h1>@yield('header_title', 'Bảng điều khiển')</h1>
                 </div>
             </header>
 

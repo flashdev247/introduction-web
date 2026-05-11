@@ -13,7 +13,7 @@ class AdminUserSeeder extends Seeder
         User::query()->updateOrCreate(
             ['email' => 'admin@example.com'],
             [
-                'name' => 'Admin',
+                'name' => 'Quản trị viên',
                 'password' => Hash::make('password'),
                 'role' => 'admin',
             ]

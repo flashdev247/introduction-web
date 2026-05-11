@@ -1,12 +1,12 @@
 @extends('layouts.front', ['settings' => $settings ?? null])
 
-@section('title', 'Products — ' . ($settings->site_name ?? 'ULIHU'))
+@section('title', 'Sản phẩm — ' . ($settings->site_name ?? 'HTTM VIETNAM'))
 
 @section('content')
 <section class="page-title">
     <div class="container">
-        <h1>Products</h1>
-        <p class="muted">Browse our latest collection.</p>
+        <h1>Sản phẩm</h1>
+        <p class="muted">Xem bộ sưu tập mới nhất của chúng tôi.</p>
     </div>
 </section>
 
@@ -14,7 +14,7 @@
     <div class="container">
         @if(isset($categories) && $categories->count() > 0)
         <div class="filters">
-            <a class="filter {{ request('category') ? '' : 'active' }}" href="{{ route('products.index') }}">All</a>
+            <a class="filter {{ request('category') ? '' : 'active' }}" href="{{ route('products.index') }}">Tất cả</a>
             @foreach($categories as $category)
             <a class="filter {{ request('category') == $category->id ? 'active' : '' }}" href="{{ route('products.index', ['category' => $category->id]) }}">
                 {{ $category->name }}
@@ -36,7 +36,7 @@
         </div>
         @endif
         @else
-        <p class="muted">No products found.</p>
+        <p class="muted">Không tìm thấy sản phẩm nào.</p>
         @endif
     </div>
 </section>

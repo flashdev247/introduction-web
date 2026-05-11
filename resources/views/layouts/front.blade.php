@@ -4,12 +4,16 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('title', $settings->site_name ?? 'ULIHU')</title>
+    <title>@yield('title', $settings->site_name ?? 'HTTM VIETNAM')</title>
     <meta name="description" content="@yield('description', $settings->contact_info ?? '')">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="/assets/images/favicon_io/site.webmanifest">
     <style>
         :root {
-            --bg: #fbfaf7;
+            --bg: #ffffff;
             --text: #1f1f1f;
             --muted: #777;
             --line: #e6e0d6;
@@ -48,13 +52,12 @@
             position: sticky;
             top: 0;
             z-index: 20;
-            background: rgba(251, 250, 247, .94);
-            border-bottom: 1px solid var(--line);
-            backdrop-filter: blur(10px)
+            background: linear-gradient(to bottom, hsla(52.5, 100%, 80%, 1), #ffffff);
+            backdrop-filter: blur(10px);
         }
 
         .nav {
-            height: 76px;
+            height: 92px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -77,58 +80,67 @@
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
-            font-weight: 600;
-            font-size: 20px
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: #222
         }
 
         .nav-end {
             display: flex;
             align-items: center;
-            gap: 24px;
+            gap: 16px;
             margin-left: auto
         }
 
         .menu {
             display: flex;
             align-items: center;
-            gap: 24px
+            gap: 32px
         }
 
         .menu a {
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: .08em
+            font-size: 15px;
+            font-weight: 500;
+            color: #333
         }
 
         .menu a.active,
         .menu a:hover {
-            color: var(--accent)
+            color: #8b6f47
         }
 
         .social-icons {
             display: flex;
             align-items: center;
-            gap: 20px
+            gap: 12px
         }
 
         .social-icons a {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 24px;
-            height: 24px;
-            color: var(--muted);
+            width: 32px;
+            height: 32px;
+            color: #666;
             transition: color .2s
         }
 
         .social-icons a:hover {
-            color: var(--dark)
+            color: #333
         }
 
         .social-icons svg {
-            width: 100%;
-            height: 100%;
+            width: 20px;
+            height: 20px;
             fill: currentColor
+        }
+        .social-icons img {
+            width: 20px;
+            height: 20px;
+            display: block;
         }
 
         .hero {
@@ -136,7 +148,7 @@
             display: grid;
             place-items: center;
             text-align: center;
-            background: linear-gradient(rgba(0, 0, 0, .28), rgba(0, 0, 0, .28)), url('/assets/home/Ulithu_Homepage_Hero.jpg');
+            background: linear-gradient(rgba(0, 0, 0, .28), rgba(0, 0, 0, .28)), url('/assets/images/logo.png');
             background-size: cover;
             background-position: center;
             color: white
@@ -606,35 +618,58 @@
 </head>
 
 <body>
+    @php
+    $phoneValue = $settings?->phone;
+    $phoneHref = $phoneValue ? 'tel:' . preg_replace('/\s+/', '', $phoneValue) : null;
+    $zaloHref = null;
+        $shopeeHref = null;
+    if (!empty($settings?->zalo)) {
+        $zaloHref = str_starts_with($settings->zalo, 'http')
+            ? $settings->zalo
+            : 'https://zalo.me/' . preg_replace('/\D+/', '', $settings->zalo);
+    }
+        if (!empty($settings?->shopee)) {
+            $shopeeHref = str_starts_with($settings->shopee, 'http')
+                ? $settings->shopee
+                : 'https://' . ltrim($settings->shopee, '/');
+        }
+    @endphp
+
     <header class="site-header">
         <div class="container nav">
             <nav class="menu" aria-label="Main navigation">
-                <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">Home</a>
-                <a href="{{ route('products.index') }}" class="{{ request()->routeIs('products.*') ? 'active' : '' }}">Shop</a>
-                <a href="{{ route('contact') }}" class="{{ request()->routeIs('contact') ? 'active' : '' }}">Contact</a>
+                <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">Trang chủ</a>
+                <a href="{{ route('products.index') }}" class="{{ request()->routeIs('products.*') ? 'active' : '' }}">Sản phẩm</a>
+                <a href="{{ route('contact') }}" class="{{ request()->routeIs('contact') ? 'active' : '' }}">Liên hệ</a>
             </nav>
 
             <div class="nav-center">
-                @if(!empty($settings?->logo))
-                <img src="{{ $settings->logo }}" alt="{{ $settings->site_name ?? 'ULIHU' }}" style="max-height: 24px;">
-                @else
-                {{ $settings->site_name ?? 'Your Site Title' }}
-                @endif
+                {{ $settings->site_name ?? 'HTTM VIETNAM' }}
             </div>
 
             <div class="nav-end">
                 <div class="social-icons">
-                    <a href="#" title="Instagram" aria-label="Instagram">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073z" />
-                            <circle cx="12" cy="12" r="3.6" />
+                    @if($phoneHref)
+                    <a href="{{ $phoneHref }}" title="Gọi điện" aria-label="Gọi điện">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2a1.5 1.5 0 0 1 1.53-.36c1.68.56 3.15.86 4.56.91.83.03 1.5.7 1.5 1.53V21.5c0 .83-.67 1.5-1.5 1.5C10.2 23 1 13.8 1 2.5 1 1.67 1.67 1 2.5 1h4.25c.83 0 1.5.67 1.53 1.5.05 1.41.35 2.88.91 4.56.18.53.04 1.12-.36 1.53l-2.21 2.2Z" />
                         </svg>
                     </a>
-                    <a href="#" title="Twitter" aria-label="Twitter">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2s9 5 20 5a9.5 9.5 0 00-9-5.5c4.75 2.25 7-7 7-7z" />
+                    @endif
+                    @if($zaloHref)
+                    <a href="{{ $zaloHref }}" title="Nhắn Zalo" aria-label="Nhắn Zalo" @if(!str_starts_with($zaloHref, 'tel:')) target="_blank" rel="noopener" @endif>
+                        <svg viewBox="0 0 64 64" aria-hidden="true">
+                            <path d="M32 6C17.64 6 6 15.92 6 28.16c0 6.92 3.78 13.1 9.7 17.16l-2.12 9.04a2 2 0 0 0 2.9 2.22l10.02-5.4c1.78.34 3.62.52 5.5.52 14.36 0 26-9.92 26-22.16S46.36 6 32 6Zm-9.3 29.96h-8.02a1.72 1.72 0 0 1-1.24-2.9l5.24-5.58h-3.78a1.7 1.7 0 1 1 0-3.4h7.66a1.72 1.72 0 0 1 1.24 2.9l-5.24 5.58h4.14a1.7 1.7 0 1 1 0 3.4Zm10.42-.04a1.7 1.7 0 0 1-1.7-1.34 4.72 4.72 0 1 1 0-5.84 1.7 1.7 0 0 1 3.38.28v5.2a1.7 1.7 0 0 1-1.68 1.7Zm-3.94-3.14a1.54 1.54 0 1 0 0-3.08 1.54 1.54 0 0 0 0 3.08Zm11.18 3.18a1.7 1.7 0 0 1-1.7-1.7v-8.5a1.7 1.7 0 1 1 3.4 0v8.5a1.7 1.7 0 0 1-1.7 1.7Zm8.06.12a4.86 4.86 0 1 1 0-9.72 4.86 4.86 0 0 1 0 9.72Zm0-3.28a1.58 1.58 0 1 0 0-3.16 1.58 1.58 0 0 0 0 3.16Z" />
                         </svg>
                     </a>
+                    @endif
+                        @if($shopeeHref)
+                        <a href="{{ $shopeeHref }}" title="Mở Shopee" aria-label="Mở Shopee" target="_blank" rel="noopener">
+                            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 30 30">
+                                <path id="Ð¡Ð»Ð¾Ð¹_1" d="M25.6,6.5c-0.3-0.3-0.7-0.5-1.1-0.5h-4.5c-0.5-2.3-2.5-4-4.9-4s-4.4,1.7-4.9,4H5.6c-0.4,0-0.8,0.2-1.1,0.5 C4.1,6.8,4,7.3,4,7.7l0.7,15.2C4.8,24.7,6.2,26,7.9,26h14.1c1.7,0,3.2-1.4,3.2-3.1L26,7.7C26,7.3,25.9,6.8,25.6,6.5z M15,4 c1.3,0,2.4,0.8,2.8,2h-5.6C12.6,4.9,13.7,4,15,4z M15,22c-2.5,0-4.2-1.8-4.2-1.8l1.1-1.8c0,0,2,1.5,3.2,1.5 c1.1,0,2.1-0.6,2.1-1.4c0-0.9-0.6-1.3-2.4-1.9c-1.5-0.6-3.5-1.3-3.5-3.4c0-1.9,1.7-3.3,3.9-3.3c2.5,0,3.8,1.4,3.8,1.4l-1,1.7 c0,0-1.5-1.1-2.8-1.1c-1.1,0-1.9,0.5-1.9,1.3c0,0.6,0.6,1,2.1,1.5c1.6,0.6,3.8,1.4,3.8,3.8C19.1,20.5,17.3,22,15,22z"></path>
+                            </svg>
+                        </a>
+                        @endif
                 </div>
             </div>
         </div>
@@ -647,29 +682,25 @@
     <footer class="site-footer">
         <div class="container footer-inner">
             <div>
-                <strong>{{ $settings->site_name ?? 'ULIHU' }}</strong>
+                <strong>{{ $settings->site_name ?? 'HTTM VIETNAM' }}</strong>
                 @if(!empty($settings?->contact_info))
                 <div>{{ $settings->contact_info }}</div>
                 @endif
             </div>
             <div>
                 @if(!empty($settings?->email))<div>Email: <a href="mailto:{{ $settings->email }}">{{ $settings->email }}</a></div>@endif
-                @if(!empty($settings?->phone))<div>Phone: <a href="tel:{{ $settings->phone }}">{{ $settings->phone }}</a></div>@endif
-                @if(!empty($settings?->address))<div>{{ $settings->address }}</div>@endif
+                @if(!empty($settings?->phone))<div>Điện thoại: <a href="tel:{{ $settings->phone }}">{{ $settings->phone }}</a></div>@endif
+                @if(!empty($settings?->address))<div>Địa chỉ: {{ $settings->address }}</div>@endif
             </div>
         </div>
     </footer>
 
     @php
-    $zaloUrl = null;
-    if (!empty($settings?->zalo)) {
-    $zaloUrl = str_starts_with($settings->zalo, 'http') ? $settings->zalo : 'https://zalo.me/' . preg_replace('/\D+/', '', $settings->zalo);
-    }
-    $hotline = $settings?->hotline ?: $settings?->phone;
+    $zaloUrl = $zaloHref;
     @endphp
 
-    @if($zaloUrl || $hotline)
-    <div class="float-buttons" aria-label="Quick contact">
+    @if($zaloUrl || $phoneHref)
+    <div class="float-buttons" aria-label="Liên hệ nhanh">
         @if($zaloUrl)
         <a class="float-btn float-btn--zalo" href="{{ $zaloUrl }}" target="_blank" rel="noopener" aria-label="Chat Zalo" title="Chat Zalo">
             <svg viewBox="0 0 64 64" aria-hidden="true">
@@ -677,8 +708,8 @@
             </svg>
         </a>
         @endif
-        @if($hotline)
-        <a class="float-btn float-btn--hotline" href="tel:{{ preg_replace('/\s+/', '', $hotline) }}" aria-label="Call hotline" title="Gọi hotline">
+        @if($phoneHref)
+        <a class="float-btn float-btn--hotline" href="{{ $phoneHref }}" aria-label="Gọi điện" title="Gọi điện">
             <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2a1.5 1.5 0 0 1 1.53-.36c1.68.56 3.15.86 4.56.91.83.03 1.5.7 1.5 1.53V21.5c0 .83-.67 1.5-1.5 1.5C10.2 23 1 13.8 1 2.5 1 1.67 1.67 1 2.5 1h4.25c.83 0 1.5.67 1.53 1.5.05 1.41.35 2.88.91 4.56.18.53.04 1.12-.36 1.53l-2.21 2.2Z" />
             </svg>

@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 @section('content')
 <div class="page-header">
-    <h1><i class="fas fa-cog"></i> Settings</h1>
+    <h1><i class="fas fa-cog"></i> Cài đặt</h1>
 </div>
 
 <div class="card">
@@ -10,18 +10,18 @@
         @method('PUT')
 
         <div class="form-group">
-            <label>Site Name *</label>
+            <label>Tên website *</label>
             <input
                 type="text"
                 name="site_name"
                 value="{{ old('site_name', $settings['site_name'] ?? '') }}"
-                placeholder="Enter site name"
+                placeholder="Nhập tên website"
                 required>
             @error('site_name')<span style="color: #e53e3e; font-size: 13px;">{{ $message }}</span>@enderror
         </div>
 
         <div class="form-group">
-            <label>Email Address</label>
+            <label>Địa chỉ email</label>
             <input
                 type="email"
                 name="email"
@@ -31,7 +31,7 @@
         </div>
 
         <div class="form-group">
-            <label>Phone</label>
+            <label>Điện thoại</label>
             <input
                 type="text"
                 name="phone"
@@ -46,44 +46,47 @@
                 type="text"
                 name="zalo"
                 value="{{ old('zalo', $settings['zalo'] ?? '') }}"
-                placeholder="0987654321 or https://zalo.me/0987654321">
-            <small style="color: #718096; font-size: 12px;">Example: 0987654321 or https://zalo.me/0987654321</small>
+                placeholder="0987654321 hoặc https://zalo.me/0987654321">
+            <small style="color: #718096; font-size: 12px;">Ví dụ: 0987654321 hoặc https://zalo.me/0987654321</small>
             @error('zalo')<span style="color: #e53e3e; font-size: 13px;">{{ $message }}</span>@enderror
         </div>
 
         <div class="form-group">
-            <label>Hotline</label>
+            <label>Shopee</label>
             <input
                 type="text"
-                name="hotline"
-                value="{{ old('hotline', $settings['hotline'] ?? '') }}"
-                placeholder="0901234567">
-            @error('hotline')<span style="color: #e53e3e; font-size: 13px;">{{ $message }}</span>@enderror
+                name="shopee"
+                value="{{ old('shopee', $settings['shopee'] ?? '') }}"
+                placeholder="https://shopee.vn/...">
+            <small style="color: #718096; font-size: 12px;">Dán link shop Shopee của bạn vào đây.</small>
+            @error('shopee')<span style="color: #e53e3e; font-size: 13px;">{{ $message }}</span>@enderror
         </div>
 
+        <!-- Hotline removed: phone is used as primary contact -->
+
         <div class="form-group">
-            <label>Address</label>
+            <label>Địa chỉ</label>
             <input
                 type="text"
                 name="address"
                 value="{{ old('address', $settings['address'] ?? '') }}"
-                placeholder="123 Main St, City, Country">
+                placeholder="123 Đường chính, Thành phố, Quốc gia">
             @error('address')<span style="color: #e53e3e; font-size: 13px;">{{ $message }}</span>@enderror
         </div>
 
         <div class="form-group">
-            <label>Contact Information</label>
+            <label>Thông tin liên hệ</label>
             <textarea
                 name="contact_info"
                 rows="6"
-                placeholder="Additional contact information...">{{ old('contact_info', $settings['contact_info'] ?? '') }}</textarea>
+                placeholder="Thông tin liên hệ bổ sung...">{{ old('contact_info', $settings['contact_info'] ?? '') }}</textarea>
             @error('contact_info')<span style="color: #e53e3e; font-size: 13px;">{{ $message }}</span>@enderror
         </div>
 
         <div style="display: flex; gap: 12px; margin-top: 32px;">
             <button type="submit" class="btn">
                 <i class="fas fa-save"></i>
-                Save Settings
+                Lưu cài đặt
             </button>
         </div>
     </form>

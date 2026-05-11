@@ -4,7 +4,11 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin Login</title>
+    <title>Đăng nhập quản trị</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="/assets/images/favicon_io/site.webmanifest">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         * {
@@ -210,8 +214,8 @@
         <div class="login-card">
             <div class="login-header">
                 <i class="fas fa-layer-group"></i>
-                <h1>Admin Panel</h1>
-                <p>Welcome back</p>
+                <h1>Trang quản trị</h1>
+                <p>Chào mừng quay lại</p>
             </div>
 
             <div class="login-body">
@@ -230,7 +234,7 @@
                     @csrf
 
                     <div class="form-group">
-                        <label for="email">Email Address</label>
+                        <label for="email">Địa chỉ email</label>
                         <input
                             id="email"
                             type="email"
@@ -242,12 +246,12 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="password">Password</label>
+                        <label for="password">Mật khẩu</label>
                         <input
                             id="password"
                             type="password"
                             name="password"
-                            placeholder="Enter your password"
+                            placeholder="Nhập mật khẩu của bạn"
                             required>
                     </div>
 
@@ -258,18 +262,18 @@
                                 name="remember"
                                 id="remember"
                                 {{ old('remember') ? 'checked' : '' }}>
-                            <label for="remember">Remember Me</label>
+                            <label for="remember">Ghi nhớ đăng nhập</label>
                         </div>
                     </div>
 
                     <button type="submit" class="login-btn">
-                        <i class="fas fa-sign-in-alt"></i> Login
+                        <i class="fas fa-sign-in-alt"></i> Đăng nhập
                     </button>
                 </form>
             </div>
 
             <div class="login-footer">
-                © 2026 Admin Panel. All rights reserved.
+                © 2026 Trang quản trị. Mọi quyền được bảo lưu.
             </div>
         </div>
     </div>

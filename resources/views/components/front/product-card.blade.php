@@ -6,7 +6,7 @@
         <img class="product-card__img product-card__img--hover" src="{{ $product->images[1] }}" alt="{{ $product->name }}">
         @endif
         @else
-        <div class="product-card__placeholder">No image</div>
+        <div class="product-card__placeholder">Chưa có ảnh</div>
         @endif
     </a>
     <div class="product-card__body">

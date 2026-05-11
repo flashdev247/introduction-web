@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ContactSetting extends Model
 {
     protected $fillable = [
-        'site_name', 'logo', 'email', 'phone', 'zalo', 'hotline', 'address', 'contact_info', 'social_links',
+        'site_name', 'logo', 'email', 'phone', 'zalo', 'address', 'contact_info', 'social_links',
     ];
 
     protected $casts = [

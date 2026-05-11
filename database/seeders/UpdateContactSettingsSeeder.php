@@ -10,13 +10,13 @@ class UpdateContactSettingsSeeder extends Seeder
     public function run(): void
     {
         $settings = [
-            'site_name' => 'Shopping Online',
+            'site_name' => 'HTTM VIETNAM',
             'zalo' => '84901234567',
-            'hotline' => '0901234567',
             'phone' => '0901234567',
+            'shopee' => 'https://shopee.vn/your-shop',
             'email' => 'contact@shoppingonline.com',
-            'address' => '123 Main Street, City, Country',
-            'contact_info' => 'Feel free to reach out to us via email or phone.'
+            'address' => '123 Đường Chính, Thành phố, Việt Nam',
+            'contact_info' => 'Vui lòng liên hệ với chúng tôi qua email hoặc điện thoại.'
         ];
 
         foreach ($settings as $key => $value) {

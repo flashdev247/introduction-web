@@ -1525,9 +1525,9 @@
         <div style="max-width: 1280px; margin: 0 auto; padding: 24px 32px; display: flex; align-items: center; justify-content: space-between;">
             <!-- Navigation Left -->
             <nav style="display: flex; align-items: center; gap: 32px; flex: 1;">
-                <a href="/" style="font-size: 14px; font-weight: 500; color: #1b1b18; text-decoration: none; border-bottom: 2px solid #1b1b18; padding-bottom: 4px;">Home</a>
-                <a href="/shop" style="font-size: 14px; font-weight: 500; color: #706f6c; text-decoration: none; transition: color 0.2s;">Shop</a>
-                <a href="/contact" style="font-size: 14px; font-weight: 500; color: #706f6c; text-decoration: none; transition: color 0.2s;">Contact</a>
+                <a href="/" style="font-size: 14px; font-weight: 500; color: #1b1b18; text-decoration: none; border-bottom: 2px solid #1b1b18; padding-bottom: 4px;">Trang chủ</a>
+                <a href="/shop" style="font-size: 14px; font-weight: 500; color: #706f6c; text-decoration: none; transition: color 0.2s;">Cửa hàng</a>
+                <a href="/contact" style="font-size: 14px; font-weight: 500; color: #706f6c; text-decoration: none; transition: color 0.2s;">Liên hệ</a>
             </nav>
 
             <!-- Title Center -->

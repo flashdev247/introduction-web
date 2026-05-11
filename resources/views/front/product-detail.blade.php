@@ -1,6 +1,6 @@
 @extends('layouts.front', ['settings' => $settings ?? null])
 
-@section('title', $product->name . ' — ' . ($settings->site_name ?? 'ULIHU'))
+@section('title', $product->name . ' — ' . ($settings->site_name ?? 'HTTM VIETNAM'))
 
 @section('content')
 <section class="section">
@@ -23,7 +23,7 @@
             </div>
             @endif
             @else
-            <div class="gallery__main" style="display:grid;place-items:center;min-height:400px;color:var(--muted)">No image</div>
+            <div class="gallery__main" style="display:grid;place-items:center;min-height:400px;color:var(--muted)">Chưa có ảnh</div>
             @endif
         </div>
 

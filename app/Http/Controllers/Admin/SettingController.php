@@ -14,7 +14,7 @@ class SettingController extends Controller
         'email',
         'phone',
         'zalo',
-        'hotline',
+        'shopee',
         'address',
         'contact_info',
     ];
@@ -36,7 +36,7 @@ class SettingController extends Controller
             'email' => ['nullable', 'email', 'max:255'],
             'phone' => ['nullable', 'string', 'max:255'],
             'zalo' => ['nullable', 'string', 'max:255'],
-            'hotline' => ['nullable', 'string', 'max:255'],
+            'shopee' => ['nullable', 'url', 'max:255'],
             'address' => ['nullable', 'string', 'max:255'],
             'contact_info' => ['nullable', 'string'],
         ]);
