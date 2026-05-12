@@ -52,7 +52,7 @@
             position: sticky;
             top: 0;
             z-index: 20;
-            background: linear-gradient(to bottom, hsla(52.5, 100%, 80%, 1), #ffffff);
+            background: linear-gradient(to bottom, #c9b49e, #ffffff);
             backdrop-filter: blur(10px);
         }
 
@@ -275,7 +275,7 @@
         }
 
         .product-card__image {
-            aspect-ratio: 3/4;
+            aspect-ratio: 1/1;
             background: #eee;
             display: block;
             overflow: hidden;
