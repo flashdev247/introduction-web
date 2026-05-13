@@ -40,6 +40,16 @@
                 {!! $product->description !!}
             </div>
             @endif
+            <div style="margin-top:20px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;" data-product-purchase
+                data-product-id="{{ $product->id }}"
+                data-product-name="{{ $product->name }}"
+                data-product-price="{{ (int) round((float) $product->price) }}"
+                data-product-image="{{ $product->first_image }}">
+                <button type="button" class="btn btn-outline" data-qty-minus>-</button>
+                <input type="number" min="1" value="1" style="max-width:90px; text-align:center;" data-qty-input>
+                <button type="button" class="btn btn-outline" data-qty-plus>+</button>
+                <button type="button" class="btn" data-add-to-cart>Thêm vào giỏ hàng</button>
+            </div>
         </div>
     </div>
 </section>

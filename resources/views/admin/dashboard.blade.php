@@ -39,5 +39,15 @@
             @endif
         </div>
     </div>
+
+    <div class="stat-card">
+        <div class="stat-icon products">
+            <i class="fas fa-receipt"></i>
+        </div>
+        <div class="stat-content">
+            <h4>Tổng đơn hàng</h4>
+            <strong>{{ $ordersCount }}</strong>
+        </div>
+    </div>
 </div>
 @endsection

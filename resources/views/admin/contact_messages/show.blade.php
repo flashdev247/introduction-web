@@ -53,7 +53,7 @@
         <form method="post" action="{{ route('admin.messages.destroy', $message) }}">
             @csrf
             @method('DELETE')
-            <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc muốn xóa vĩnh viễn tin nhắn này không?')">
+            <button type="submit" class="btn btn-danger" data-confirm-message="Bạn có chắc muốn xóa vĩnh viễn tin nhắn này không?">
                 <i class="fas fa-trash-alt"></i> Xóa tin nhắn
             </button>
         </form>

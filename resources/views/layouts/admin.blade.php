@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Trang quản trị</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicon_io/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon_io/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon_io/favicon-16x16.png">
@@ -594,6 +595,12 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{ route('admin.orders.index') }}" @class(['active'=> request()->routeIs('admin.orders.*')])>
+                        <i class="fas fa-receipt"></i>
+                        Đơn hàng
+                    </a>
+                </li>
+                <li>
                     <a href="{{ route('admin.settings.edit') }}" @class(['active'=> request()->routeIs('admin.settings.*')])>
                         <i class="fas fa-cog"></i>
                         Cài đặt
@@ -651,6 +658,8 @@
             </main>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js" defer></script>
+    <script src="{{ asset('js/app-toast.js') }}" defer></script>
 </body>
 
 </html>

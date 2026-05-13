@@ -42,7 +42,7 @@
                         <form method="post" action="{{ route('admin.categories.destroy',$category) }}" style="display:inline">
                             @csrf
                             @method('DELETE')
-                            <button class="btn btn-sm btn-danger" onclick="return confirm('Xóa danh mục này?')">
+                            <button class="btn btn-sm btn-danger" data-confirm-message="Xóa danh mục này?">
                                 <i class="fas fa-trash"></i> Xóa
                             </button>
                         </form>

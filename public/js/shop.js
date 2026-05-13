@@ -1,250 +1,374 @@
-/**
- * Shop JS - Custom interactions for product list & detail pages
- */
+(() => {
+  const CART_KEY = "httm_cart_v1";
+  const CART_META_KEY = "httm_cart_meta_v1";
+  const MIN_ORDER_TOTAL = 500000;
+  const ADDRESS_API_BASE = "https://provinces.open-api.vn/api/v2";
 
-document.addEventListener('DOMContentLoaded', function () {
+  const formatMoney = (value) => `${Number(value || 0).toLocaleString("vi-VN")}đ`;
 
-  // ============================
-  // PRODUCT LIST - Hover Image Swap
-  // ============================
-  var productListItems = document.querySelectorAll('.product-list-item');
-  productListItems.forEach(function (item) {
-    var primaryImg = item.querySelector('.product-list-primary-image');
-    var hoverImg = item.querySelector('.product-list-hover-image');
+  const getCart = () => {
+    try {
+      const cart = JSON.parse(localStorage.getItem(CART_KEY) || "[]");
+      return Array.isArray(cart) ? cart : [];
+    } catch {
+      return [];
+    }
+  };
 
-    if (hoverImg && primaryImg) {
-      // Position the wrapper relatively for overlay
-      var wrapper = primaryImg.closest('.grid-image-wrapper');
-      if (wrapper) {
-        wrapper.style.position = 'relative';
+  const setCart = (cart) => localStorage.setItem(CART_KEY, JSON.stringify(cart));
+
+  const getCartMeta = () => {
+    try {
+      return JSON.parse(localStorage.getItem(CART_META_KEY) || "{}");
+    } catch {
+      return {};
+    }
+  };
+
+  const setCartMeta = (meta) => localStorage.setItem(CART_META_KEY, JSON.stringify(meta));
+
+  const getCartTotal = () => getCart().reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const getCartCount = () => getCart().reduce((sum, item) => sum + item.quantity, 0);
+
+  const refreshHeaderCartCount = () => {
+    document.querySelectorAll("[data-cart-count]").forEach((el) => {
+      el.textContent = String(getCartCount());
+    });
+  };
+
+  const upsertCartItem = (payload) => {
+    const cart = getCart();
+    const idx = cart.findIndex((i) => i.id === payload.id);
+    if (idx === -1) {
+      cart.push(payload);
+    } else {
+      cart[idx].quantity += payload.quantity;
+    }
+    setCart(cart);
+    refreshHeaderCartCount();
+  };
+
+  const setupProductPurchase = () => {
+    const root = document.querySelector("[data-product-purchase]");
+    if (!root) return;
+
+    const qtyInput = root.querySelector("[data-qty-input]");
+    const minusBtn = root.querySelector("[data-qty-minus]");
+    const plusBtn = root.querySelector("[data-qty-plus]");
+    const addBtn = root.querySelector("[data-add-to-cart]");
+    const product = {
+      id: Number(root.dataset.productId),
+      name: root.dataset.productName || "",
+      price: Number(root.dataset.productPrice || 0),
+      image: root.dataset.productImage || "",
+    };
+
+    minusBtn?.addEventListener("click", () => {
+      qtyInput.value = String(Math.max(1, Number(qtyInput.value || 1) - 1));
+    });
+    plusBtn?.addEventListener("click", () => {
+      qtyInput.value = String(Math.max(1, Number(qtyInput.value || 1) + 1));
+    });
+
+    addBtn?.addEventListener("click", () => {
+      const quantity = Math.max(1, Number(qtyInput.value || 1));
+      upsertCartItem({ ...product, quantity });
+      addBtn.textContent = "Đã thêm vào giỏ";
+      setTimeout(() => {
+        addBtn.textContent = "Thêm vào giỏ hàng";
+      }, 1200);
+    });
+  };
+
+  const setupCartPage = () => {
+    const page = document.querySelector("[data-cart-page]");
+    if (!page) return;
+
+    const itemsWrap = page.querySelector("[data-cart-items]");
+    const summary = page.querySelector("[data-cart-summary]");
+    const totalEl = page.querySelector("[data-cart-total]");
+    const noteEl = page.querySelector("[data-order-note]");
+    const invoiceToggle = page.querySelector("[data-invoice-toggle]");
+    const invoiceForm = page.querySelector("[data-invoice-form]");
+    const checkoutBtn = page.querySelector("[data-cart-checkout]");
+
+    const confirmModal = document.querySelector("[data-invoice-confirm-modal]");
+    const confirmNo = confirmModal?.querySelector("[data-invoice-confirm-no]");
+    const confirmYes = confirmModal?.querySelector("[data-invoice-confirm-yes]");
+
+    const meta = getCartMeta();
+    noteEl.value = meta.note || "";
+    if (meta.invoice?.wants_invoice) {
+      invoiceToggle.checked = true;
+      invoiceForm.style.display = "block";
+      page.querySelector("[data-invoice-company]").value = meta.invoice.invoice_company || "";
+      page.querySelector("[data-invoice-tax-code]").value = meta.invoice.invoice_tax_code || "";
+      page.querySelector("[data-invoice-email]").value = meta.invoice.invoice_email || "";
+      page.querySelector("[data-invoice-address]").value = meta.invoice.invoice_address || "";
+    }
+
+    const persistMeta = () => {
+      setCartMeta({
+        ...getCartMeta(),
+        note: noteEl.value || "",
+        invoice: {
+          wants_invoice: !!invoiceToggle.checked,
+          invoice_company: page.querySelector("[data-invoice-company]").value || "",
+          invoice_tax_code: page.querySelector("[data-invoice-tax-code]").value || "",
+          invoice_email: page.querySelector("[data-invoice-email]").value || "",
+          invoice_address: page.querySelector("[data-invoice-address]").value || "",
+        },
+      });
+    };
+
+    const render = () => {
+      const cart = getCart();
+      summary.textContent = `Bạn đang có ${cart.length} sản phẩm trong giỏ hàng`;
+      itemsWrap.innerHTML = "";
+
+      cart.forEach((item) => {
+        const row = document.createElement("div");
+        row.style.border = "1px solid var(--line)";
+        row.style.borderRadius = "8px";
+        row.style.padding = "12px";
+        row.style.display = "grid";
+        row.style.gridTemplateColumns = "76px minmax(0, 1fr) auto";
+        row.style.gap = "14px";
+        row.style.alignItems = "center";
+        row.style.background = "#fff";
+        row.innerHTML = `
+          <img src="${item.image || ""}" alt="" style="width:76px;height:76px;object-fit:cover;background:#f4f1ec;border-radius:6px;">
+          <div style="min-width:0;">
+            <strong style="font-size:16px; line-height:1.35; display:block; font-weight:700;">${item.name}</strong>
+            <div class="muted" style="font-size:15px; margin-top:4px;">${formatMoney(item.price)}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <button type="button" class="btn btn-outline" data-action="decrease" style="height:34px; min-width:34px; padding:0; border-radius:4px;">-</button>
+            <span style="min-width:24px; text-align:center; font-weight:600;">${item.quantity}</span>
+            <button type="button" class="btn btn-outline" data-action="increase" style="height:34px; min-width:34px; padding:0; border-radius:4px;">+</button>
+            <button type="button" class="btn btn-outline" data-action="remove" style="height:34px; min-width:34px; padding:0; border-radius:4px;">x</button>
+          </div>
+        `;
+        row.querySelector('[data-action="decrease"]').addEventListener("click", () => {
+          const next = getCart().map((x) => x.id === item.id ? { ...x, quantity: Math.max(1, x.quantity - 1) } : x);
+          setCart(next); refreshHeaderCartCount(); render();
+        });
+        row.querySelector('[data-action="increase"]').addEventListener("click", () => {
+          const next = getCart().map((x) => x.id === item.id ? { ...x, quantity: x.quantity + 1 } : x);
+          setCart(next); refreshHeaderCartCount(); render();
+        });
+        row.querySelector('[data-action="remove"]').addEventListener("click", () => {
+          const next = getCart().filter((x) => x.id !== item.id);
+          setCart(next); refreshHeaderCartCount(); render();
+        });
+        itemsWrap.appendChild(row);
+      });
+
+      const total = getCartTotal();
+      totalEl.textContent = formatMoney(total);
+      checkoutBtn.disabled = total < MIN_ORDER_TOTAL || cart.length === 0;
+      checkoutBtn.style.opacity = checkoutBtn.disabled ? "0.6" : "1";
+    };
+
+    invoiceToggle?.addEventListener("change", () => {
+      invoiceForm.style.display = invoiceToggle.checked ? "block" : "none";
+      persistMeta();
+    });
+    noteEl?.addEventListener("input", persistMeta);
+    ["[data-invoice-company]", "[data-invoice-tax-code]", "[data-invoice-email]", "[data-invoice-address]"]
+      .forEach((selector) => page.querySelector(selector)?.addEventListener("input", persistMeta));
+
+    checkoutBtn?.addEventListener("click", () => {
+      persistMeta();
+      if (invoiceToggle.checked) {
+        confirmModal.style.display = "block";
+        return;
       }
+      window.location.href = "/checkout";
+    });
 
-      // Style hover image: absolutely positioned on top, hidden initially
-      hoverImg.style.position = 'absolute';
-      hoverImg.style.top = '0';
-      hoverImg.style.left = '0';
-      hoverImg.style.width = '100%';
-      hoverImg.style.height = '100%';
-      hoverImg.style.objectFit = 'cover';
-      hoverImg.style.opacity = '0';
-      hoverImg.style.transition = 'opacity 0.4s ease';
-      hoverImg.style.zIndex = '1';
+    confirmNo?.addEventListener("click", () => {
+      invoiceToggle.checked = false;
+      invoiceForm.style.display = "none";
+      persistMeta();
+      confirmModal.style.display = "none";
+      window.location.href = "/checkout";
+    });
+    confirmYes?.addEventListener("click", () => {
+      persistMeta();
+      confirmModal.style.display = "none";
+      window.location.href = "/checkout";
+    });
 
-      // Style primary image transition
-      primaryImg.style.transition = 'opacity 0.4s ease';
+    render();
+  };
 
-      item.addEventListener('mouseenter', function () {
-        hoverImg.style.opacity = '1';
-        primaryImg.style.opacity = '0';
-      });
+  const setupCheckoutPage = () => {
+    const page = document.querySelector("[data-checkout-page]");
+    if (!page) return;
 
-      item.addEventListener('mouseleave', function () {
-        hoverImg.style.opacity = '0';
-        primaryImg.style.opacity = '1';
-      });
-    } else if (primaryImg) {
-      // Fallback: simple hover effect if no second image
-      item.addEventListener('mouseenter', function () {
-        primaryImg.style.transition = 'transform 0.4s ease, opacity 0.4s ease';
-        primaryImg.style.transform = 'scale(1.05)';
-        primaryImg.style.opacity = '0.9';
-      });
+    const cart = getCart();
+    const meta = getCartMeta();
+    const form = page.querySelector("[data-checkout-form]");
+    const itemsWrap = page.querySelector("[data-checkout-items]");
+    const totalEl = page.querySelector("[data-checkout-total]");
+    const invoiceToggle = page.querySelector("[data-checkout-invoice-toggle]");
+    const invoiceForm = page.querySelector("[data-checkout-invoice-form]");
+    const provinceSelect = page.querySelector("[data-province-select]");
+    const communeSelect = page.querySelector("[data-commune-select]");
+    const statusEl = page.querySelector("[data-address-api-status]");
 
-      item.addEventListener('mouseleave', function () {
-        primaryImg.style.transform = 'scale(1)';
-        primaryImg.style.opacity = '1';
+    const total = getCartTotal();
+    totalEl.textContent = formatMoney(total);
+    itemsWrap.innerHTML = cart.map((item) =>
+      `<div style="display:flex;justify-content:space-between;gap:12px;font-size:15px;"><span>${item.name} x ${item.quantity}</span><strong>${formatMoney(item.quantity * item.price)}</strong></div>`
+    ).join("");
+
+    if (meta?.note) {
+      const noteField = form.querySelector('[name="note"]');
+      if (noteField) noteField.value = meta.note;
+    }
+    if (meta?.invoice?.wants_invoice) {
+      invoiceToggle.checked = true;
+      invoiceForm.style.display = "block";
+      Object.entries(meta.invoice).forEach(([key, value]) => {
+        const field = form.querySelector(`[name="${key}"]`);
+        if (field && typeof value === "string") field.value = value;
       });
     }
+
+    const persistCheckoutInvoice = () => {
+      const current = getCartMeta();
+      setCartMeta({
+        ...current,
+        note: form.querySelector('[name="note"]')?.value || current.note || "",
+        invoice: {
+          wants_invoice: !!invoiceToggle.checked,
+          invoice_company: form.querySelector('[name="invoice_company"]')?.value || "",
+          invoice_tax_code: form.querySelector('[name="invoice_tax_code"]')?.value || "",
+          invoice_email: form.querySelector('[name="invoice_email"]')?.value || "",
+          invoice_address: form.querySelector('[name="invoice_address"]')?.value || "",
+        },
+      });
+    };
+
+    invoiceToggle?.addEventListener("change", () => {
+      invoiceForm.style.display = invoiceToggle.checked ? "block" : "none";
+      persistCheckoutInvoice();
+    });
+    ["invoice_company", "invoice_tax_code", "invoice_email", "invoice_address"]
+      .forEach((name) => form.querySelector(`[name="${name}"]`)?.addEventListener("input", persistCheckoutInvoice));
+
+    const fillAddressData = (target, options, placeholder) => {
+      target.innerHTML = `<option value="">${placeholder}</option>`;
+      options.forEach((item) => {
+        const op = document.createElement("option");
+        op.value = item.code;
+        op.textContent = item.name;
+        op.dataset.name = item.name;
+        target.appendChild(op);
+      });
+    };
+
+    const fetchJson = async (url) => {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("Address API error");
+      return res.json();
+    };
+
+    const loadProvinces = async () => {
+      statusEl.textContent = "Đang tải danh sách tỉnh/thành...";
+      const data = await fetchJson(`${ADDRESS_API_BASE}/?depth=1`);
+      const provinces = Array.isArray(data) ? data : (data.provinces || data.data || []);
+      fillAddressData(provinceSelect, provinces, "Chọn Tỉnh/Thành phố");
+      statusEl.textContent = "";
+    };
+
+    const loadCommunes = async (provinceCode) => {
+      communeSelect.disabled = true;
+      fillAddressData(communeSelect, [], "Chọn Phường/Xã");
+      if (!provinceCode) return;
+      statusEl.textContent = "Đang tải danh sách phường/xã...";
+      const data = await fetchJson(`${ADDRESS_API_BASE}/p/${provinceCode}?depth=2`);
+      const wards = data.wards || data.communes || [];
+      fillAddressData(communeSelect, wards, "Chọn Phường/Xã");
+      communeSelect.disabled = false;
+      statusEl.textContent = "";
+    };
+
+    loadProvinces().catch(() => {
+      statusEl.textContent = "Không tải được danh sách địa chỉ, vui lòng thử lại.";
+    });
+
+    provinceSelect.addEventListener("change", () => {
+      loadCommunes(provinceSelect.value).catch(() => {
+        statusEl.textContent = "Không tải được danh sách phường/xã, vui lòng thử lại.";
+      });
+    });
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (cart.length === 0 || total < MIN_ORDER_TOTAL) {
+        window.AppToast?.error("Đơn hàng chưa đủ điều kiện thanh toán (tối thiểu 500.000đ).");
+        return;
+      }
+
+      const provinceOption = provinceSelect.options[provinceSelect.selectedIndex];
+      const communeOption = communeSelect.options[communeSelect.selectedIndex];
+      form.querySelector('[name="province_name"]').value = provinceOption?.dataset?.name || "";
+      form.querySelector('[name="commune_name"]').value = communeOption?.dataset?.name || "";
+
+      persistCheckoutInvoice();
+
+      const payload = Object.fromEntries(new FormData(form).entries());
+      payload.wants_invoice = !!invoiceToggle.checked;
+      payload.invoice_company = form.querySelector('[name="invoice_company"]')?.value || "";
+      payload.invoice_tax_code = form.querySelector('[name="invoice_tax_code"]')?.value || "";
+      payload.invoice_email = form.querySelector('[name="invoice_email"]')?.value || "";
+      payload.invoice_address = form.querySelector('[name="invoice_address"]')?.value || "";
+      payload.items = cart.map((item) => ({ product_id: item.id, quantity: item.quantity }));
+
+      const csrf = document.querySelector('meta[name="csrf-token"]')?.content || "";
+      const button = page.querySelector("[data-place-order-btn]");
+      button.disabled = true;
+      button.textContent = "Đang xử lý...";
+
+      try {
+        const res = await fetch("/checkout/place-order", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": csrf,
+            "Accept": "application/json",
+          },
+          body: JSON.stringify(payload),
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.message || "Không thể đặt hàng.");
+        }
+
+        localStorage.removeItem(CART_KEY);
+        localStorage.removeItem(CART_META_KEY);
+        refreshHeaderCartCount();
+        window.AppToast?.success(`Đặt hàng thành công. Mã đơn: ${data.order_code}`);
+        setTimeout(() => {
+          window.location.href = "/products";
+        }, 1200);
+      } catch (error) {
+        window.AppToast?.error(error.message || "Có lỗi khi đặt hàng.");
+      } finally {
+        button.disabled = false;
+        button.textContent = "ĐẶT HÀNG";
+      }
+    });
+  };
+
+  document.addEventListener("DOMContentLoaded", () => {
+    refreshHeaderCartCount();
+    setupProductPurchase();
+    setupCartPage();
+    setupCheckoutPage();
   });
-
-  // ============================
-  // PRODUCT DETAIL - Gallery
-  // ============================
-  const galleryContainer = document.querySelector('[data-product-gallery="container"], .product-gallery');
-  if (galleryContainer) {
-    const slides = document.querySelectorAll('[data-product-gallery="slides-item"], .product-gallery-slides-item');
-    const thumbnails = document.querySelectorAll('[data-product-gallery="thumbnails-item"], .product-gallery-thumbnails-item');
-    const prevBtn = document.querySelector('[data-product-gallery="prev"], .product-gallery-prev');
-    const nextBtn = document.querySelector('[data-product-gallery="next"], .product-gallery-next');
-    const indicator = document.querySelector('[data-product-gallery="indicator"], .product-gallery-current-slide-indicator');
-
-    let currentIndex = 0;
-    const total = slides.length;
-
-    function showSlide(index) {
-      if (index < 0) index = total - 1;
-      if (index >= total) index = 0;
-      currentIndex = index;
-
-      slides.forEach(function (slide, i) {
-        if (i === index) {
-          slide.classList.add('selected');
-          slide.classList.remove('prev-slide', 'next-slide');
-          slide.removeAttribute('aria-hidden');
-          slide.setAttribute('tabindex', '0');
-        } else {
-          slide.classList.remove('selected');
-          slide.classList.add(i < index ? 'prev-slide' : 'next-slide');
-          slide.setAttribute('aria-hidden', 'true');
-          slide.setAttribute('tabindex', '-1');
-        }
-      });
-
-      thumbnails.forEach(function (thumb, i) {
-        if (i === index) {
-          thumb.classList.add('active');
-          thumb.setAttribute('aria-current', 'true');
-        } else {
-          thumb.classList.remove('active');
-          thumb.setAttribute('aria-current', 'false');
-        }
-      });
-
-      if (indicator) {
-        indicator.textContent = (index + 1) + ' / ' + total;
-      }
-    }
-
-    // Thumbnail click
-    thumbnails.forEach(function (thumb, i) {
-      thumb.addEventListener('click', function (e) {
-        e.preventDefault();
-        showSlide(i);
-      });
-    });
-
-    // Prev/Next buttons
-    if (prevBtn) {
-      prevBtn.addEventListener('click', function (e) {
-        e.preventDefault();
-        showSlide(currentIndex - 1);
-      });
-    }
-
-    if (nextBtn) {
-      nextBtn.addEventListener('click', function (e) {
-        e.preventDefault();
-        showSlide(currentIndex + 1);
-      });
-    }
-
-    // Keyboard navigation
-    document.addEventListener('keydown', function (e) {
-      if (!galleryContainer.closest('section, .product-detail')) return;
-      if (e.key === 'ArrowLeft') {
-        showSlide(currentIndex - 1);
-      } else if (e.key === 'ArrowRight') {
-        showSlide(currentIndex + 1);
-      }
-    });
-
-    // Touch/swipe support
-    let touchStartX = 0;
-    let touchEndX = 0;
-
-    galleryContainer.addEventListener('touchstart', function (e) {
-      touchStartX = e.changedTouches[0].screenX;
-    }, { passive: true });
-
-    galleryContainer.addEventListener('touchend', function (e) {
-      touchEndX = e.changedTouches[0].screenX;
-      var diff = touchStartX - touchEndX;
-      if (Math.abs(diff) > 50) {
-        if (diff > 0) {
-          showSlide(currentIndex + 1);
-        } else {
-          showSlide(currentIndex - 1);
-        }
-      }
-    }, { passive: true });
-
-    // Initialize first slide
-    showSlide(0);
-  }
-
-  // ============================
-  // PRODUCT DETAIL - Lightbox
-  // ============================
-  const lightbox = document.querySelector('.gallery-lightbox-outer-wrapper, .gallery-lightbox');
-  if (lightbox) {
-    const lightboxClose = lightbox.querySelector('[data-close], .gallery-lightbox-close-btn');
-    const lightboxPrev = lightbox.querySelector('[data-previous], .gallery-lightbox-control-previous') ||
-      lightbox.querySelector('[data-previous]');
-    const lightboxNext = lightbox.querySelector('[data-next], .gallery-lightbox-control-next') ||
-      lightbox.querySelector('[data-next]');
-    const lightboxItems = lightbox.querySelectorAll('.gallery-lightbox-item');
-    let lightboxIndex = 0;
-
-    function showLightboxSlide(index) {
-      if (index < 0) index = lightboxItems.length - 1;
-      if (index >= lightboxItems.length) index = 0;
-      lightboxIndex = index;
-
-      lightboxItems.forEach(function (item, i) {
-        if (i === index) {
-          item.style.display = '';
-          item.classList.add('active');
-        } else {
-          item.style.display = 'none';
-          item.classList.remove('active');
-        }
-      });
-    }
-
-    // Open lightbox when clicking main gallery image
-    var mainSlides = document.querySelectorAll('.product-gallery-slides-item');
-    mainSlides.forEach(function (slide) {
-      slide.style.cursor = 'pointer';
-      slide.addEventListener('click', function () {
-        var idx = Array.from(mainSlides).indexOf(slide);
-        lightboxIndex = idx;
-        showLightboxSlide(idx);
-        lightbox.style.display = '';
-        lightbox.classList.add('visible');
-        document.body.style.overflow = 'hidden';
-      });
-    });
-
-    if (lightboxClose) {
-      lightboxClose.addEventListener('click', function (e) {
-        e.preventDefault();
-        lightbox.style.display = 'none';
-        lightbox.classList.remove('visible');
-        document.body.style.overflow = '';
-      });
-    }
-
-    var lbPrevBtn = lightboxPrev ? lightboxPrev.querySelector('button') : null;
-    var lbNextBtn = lightboxNext ? lightboxNext.querySelector('button') : null;
-
-    if (lbPrevBtn) {
-      lbPrevBtn.addEventListener('click', function (e) {
-        e.preventDefault();
-        showLightboxSlide(lightboxIndex - 1);
-      });
-    }
-
-    if (lbNextBtn) {
-      lbNextBtn.addEventListener('click', function (e) {
-        e.preventDefault();
-        showLightboxSlide(lightboxIndex + 1);
-      });
-    }
-
-    // Close on escape
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && lightbox.classList.contains('visible')) {
-        lightbox.style.display = 'none';
-        lightbox.classList.remove('visible');
-        document.body.style.overflow = '';
-      }
-      if (lightbox.classList.contains('visible')) {
-        if (e.key === 'ArrowLeft') showLightboxSlide(lightboxIndex - 1);
-        if (e.key === 'ArrowRight') showLightboxSlide(lightboxIndex + 1);
-      }
-    });
-
-    // Initialize: hide lightbox
-    lightbox.style.display = 'none';
-  }
-});
+})();
