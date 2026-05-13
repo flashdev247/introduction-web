@@ -11,7 +11,12 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        return view('admin.categories.index', ['categories' => Category::withCount('products')->latest()->get()]);
+        return view('admin.categories.index', [
+            'categories' => Category::withCount('products')
+                ->latest()
+                ->paginate(15)
+                ->withQueryString(),
+        ]);
     }
 
     public function create()

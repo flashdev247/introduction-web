@@ -19,7 +19,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($categories as $category)
+            @forelse($categories as $category)
             <tr>
                 <td><strong>{{ $category->name }}</strong></td>
                 <td>{{ $category->products_count }}</td>
@@ -49,8 +49,21 @@
                     </div>
                 </td>
             </tr>
-            @endforeach
+            @empty
+            <tr>
+                <td colspan="4" style="text-align: center; padding: 48px; color: #a0aec0;">
+                    <i class="fas fa-folder-open" style="font-size: 48px; margin-bottom: 16px; display: block;"></i>
+                    Không có danh mục nào.
+                </td>
+            </tr>
+            @endforelse
         </tbody>
     </table>
 </div>
+
+@if($categories->hasPages())
+<div class="pagination-wrapper">
+    {{ $categories->links() }}
+</div>
+@endif
 @endsection

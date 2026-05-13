@@ -13,7 +13,12 @@ class ProductController extends Controller
 {
     public function index()
     {
-        return view('admin.products.index', ['products' => Product::with('category')->latest()->get()]);
+        return view('admin.products.index', [
+            'products' => Product::with('category')
+                ->latest()
+                ->paginate(15)
+                ->withQueryString(),
+        ]);
     }
 
     public function create()

@@ -21,7 +21,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($products as $product)
+            @forelse($products as $product)
             <tr>
                 <td><strong>{{ $product->name }}</strong></td>
                 <td>{{ $product->category?->name ?? '-' }}</td>
@@ -52,8 +52,21 @@
                     </div>
                 </td>
             </tr>
-            @endforeach
+            @empty
+            <tr>
+                <td colspan="5" style="text-align: center; padding: 48px; color: #a0aec0;">
+                    <i class="fas fa-box-open" style="font-size: 48px; margin-bottom: 16px; display: block;"></i>
+                    Không có sản phẩm nào.
+                </td>
+            </tr>
+            @endforelse
         </tbody>
     </table>
 </div>
+
+@if($products->hasPages())
+<div class="pagination-wrapper">
+    {{ $products->links() }}
+</div>
+@endif
 @endsection

@@ -437,6 +437,70 @@
             display: inline;
         }
 
+        /* Pagination */
+        .pagination-wrapper {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
+
+        .pagination-wrapper nav > div:first-child {
+            display: none;
+        }
+
+        .pagination-wrapper nav > div:last-child {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .pagination-wrapper svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .pagination-wrapper span[aria-current="page"] span,
+        .pagination-wrapper a,
+        .pagination-wrapper span:not([aria-current="page"]) span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 40px;
+            height: 40px;
+            padding: 0 14px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            background: white;
+            color: #4a5568;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .pagination-wrapper nav > div:last-child > span,
+        .pagination-wrapper nav > div:last-child > a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .pagination-wrapper a:hover {
+            background: #f7fafc;
+            border-color: #cbd5e0;
+        }
+
+        .pagination-wrapper span[aria-current="page"] span {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            border-color: #38a169;
+            color: white;
+        }
+
+        .pagination-wrapper span:not([aria-current="page"]) span {
+            background: #edf2f7;
+            color: #a0aec0;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .sidebar {
@@ -477,6 +541,19 @@
             td {
                 padding: 12px 8px;
                 font-size: 12px;
+            }
+
+            .pagination-wrapper {
+                justify-content: center;
+            }
+
+            .pagination-wrapper span[aria-current="page"] span,
+            .pagination-wrapper a,
+            .pagination-wrapper span:not([aria-current="page"]) span {
+                min-width: 36px;
+                height: 36px;
+                padding: 0 10px;
+                font-size: 13px;
             }
         }
     </style>

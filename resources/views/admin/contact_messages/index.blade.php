@@ -72,7 +72,7 @@
 </div>
 
 @if($messages->hasPages())
-<div style="margin-top: 24px;">
+<div class="pagination-wrapper">
     {{ $messages->links() }}
 </div>
 @endif
