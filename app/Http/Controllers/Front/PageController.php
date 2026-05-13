@@ -28,7 +28,7 @@ class PageController extends Controller
     public function home()
     {
         $settings = $this->getSettings();
-        $featuredProducts = Product::where('is_active', true)->where('is_featured', true)->take(6)->get();
+        $featuredProducts = Product::where('is_active', true)->where('is_featured', true)->latest()->simplePaginate(6);
 
         return view('front.home', compact('settings', 'featuredProducts'));
     }
@@ -42,10 +42,13 @@ class PageController extends Controller
         if ($categoryId) {
             $query->where('category_id', $categoryId);
         }
-
-        $products = $query->get();
+        $products = $query->paginate(12)->withQueryString();
         $categories = Category::all();
         $currentCategory = null;
+
+        if ($categoryId) {
+            $currentCategory = Category::find($categoryId);
+        }
 
         return view('front.products', compact('settings', 'products', 'categories', 'currentCategory'));
     }
