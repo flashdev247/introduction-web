@@ -31,7 +31,7 @@ class ProductSeeder extends Seeder
             $name = ucfirst($faker->words($faker->numberBetween(2,4), true));
             $description = '<p>' . implode('</p><p>', $faker->paragraphs(2)) . '</p>';
             $price = $faker->numberBetween(20000, 500000);
-            $images = $faker->randomElements($productImages, $faker->numberBetween(1,3));
+            $images = $faker->randomElements($productImages, $faker->numberBetween(1,2));
             $category = $categories->random();
 
             Product::create([
