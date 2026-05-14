@@ -259,7 +259,9 @@
     }
 
     window.removeImage = function(element) {
-        if (confirm('Remove this image?')) {
+        window.AppToast.confirm({
+            message: 'Xóa ảnh này?',
+            onConfirm: function() {
             const image = element.dataset.image;
             const textarea = document.querySelector('textarea[name="images_text"]');
             let images = textarea.value.split('\n').filter(img => img.trim() !== '');
@@ -269,7 +271,8 @@
             if (card) {
                 card.remove();
             }
-        }
+            }
+        });
     }
 </script>
 

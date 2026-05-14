@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\ContactMessage;
+use App\Models\Order;
 use App\Models\Product;
 
 class DashboardController extends Controller
@@ -16,6 +17,7 @@ class DashboardController extends Controller
             'categoriesCount' => Category::count(),
             'messagesCount' => ContactMessage::count(),
             'unreadMessagesCount' => ContactMessage::where('is_read', false)->count(),
+            'ordersCount' => Order::count(),
         ]);
     }
 }

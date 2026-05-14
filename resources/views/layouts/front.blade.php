@@ -6,11 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', $settings->site_name ?? 'HTTM VIETNAM')</title>
     <meta name="description" content="@yield('description', $settings->contact_info ?? '')">
+    <link rel="canonical" href="{{ url()->current() }}">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="@yield('title', $settings->site_name ?? 'HTTM VIETNAM')">
+    <meta property="og:description" content="@yield('description', $settings->contact_info ?? '')">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:image" content="{{ asset('assets/images/logo.png') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicon_io/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon_io/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon_io/favicon-16x16.png">
     <link rel="manifest" href="/assets/images/favicon_io/site.webmanifest">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <style>
         :root {
             --bg: #ffffff;
@@ -141,6 +148,35 @@
             width: 20px;
             height: 20px;
             display: block;
+        }
+
+        .cart-link {
+            position: relative;
+            display: inline-flex;
+            width: 36px;
+            height: 36px;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            background: #fff;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            min-width: 20px;
+            height: 20px;
+            border-radius: 10px;
+            background: #dc2626;
+            color: #fff;
+            font-size: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 6px;
+            font-weight: 700;
         }
 
         .hero {
@@ -656,6 +692,15 @@
             }
         }
     </style>
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@@type": "Organization",
+        "name": "{{ $settings->site_name ?? 'HTTM VIETNAM' }}",
+        "url": "{{ url('/') }}",
+        "logo": "{{ asset('assets/images/logo.png') }}"
+    }
+    </script>
 </head>
 
 <body>
@@ -690,20 +735,6 @@
 
             <div class="nav-end">
                 <div class="social-icons">
-                    @if($phoneHref)
-                    <a href="{{ $phoneHref }}" title="Gọi điện" aria-label="Gọi điện">
-                        <svg viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2a1.5 1.5 0 0 1 1.53-.36c1.68.56 3.15.86 4.56.91.83.03 1.5.7 1.5 1.53V21.5c0 .83-.67 1.5-1.5 1.5C10.2 23 1 13.8 1 2.5 1 1.67 1.67 1 2.5 1h4.25c.83 0 1.5.67 1.53 1.5.05 1.41.35 2.88.91 4.56.18.53.04 1.12-.36 1.53l-2.21 2.2Z" />
-                        </svg>
-                    </a>
-                    @endif
-                    @if($zaloHref)
-                    <a href="{{ $zaloHref }}" title="Nhắn Zalo" aria-label="Nhắn Zalo" @if(!str_starts_with($zaloHref, 'tel:')) target="_blank" rel="noopener" @endif>
-                        <svg viewBox="0 0 64 64" aria-hidden="true">
-                            <path d="M32 6C17.64 6 6 15.92 6 28.16c0 6.92 3.78 13.1 9.7 17.16l-2.12 9.04a2 2 0 0 0 2.9 2.22l10.02-5.4c1.78.34 3.62.52 5.5.52 14.36 0 26-9.92 26-22.16S46.36 6 32 6Zm-9.3 29.96h-8.02a1.72 1.72 0 0 1-1.24-2.9l5.24-5.58h-3.78a1.7 1.7 0 1 1 0-3.4h7.66a1.72 1.72 0 0 1 1.24 2.9l-5.24 5.58h4.14a1.7 1.7 0 1 1 0 3.4Zm10.42-.04a1.7 1.7 0 0 1-1.7-1.34 4.72 4.72 0 1 1 0-5.84 1.7 1.7 0 0 1 3.38.28v5.2a1.7 1.7 0 0 1-1.68 1.7Zm-3.94-3.14a1.54 1.54 0 1 0 0-3.08 1.54 1.54 0 0 0 0 3.08Zm11.18 3.18a1.7 1.7 0 0 1-1.7-1.7v-8.5a1.7 1.7 0 1 1 3.4 0v8.5a1.7 1.7 0 0 1-1.7 1.7Zm8.06.12a4.86 4.86 0 1 1 0-9.72 4.86 4.86 0 0 1 0 9.72Zm0-3.28a1.58 1.58 0 1 0 0-3.16 1.58 1.58 0 0 0 0 3.16Z" />
-                        </svg>
-                    </a>
-                    @endif
                         @if($shopeeHref)
                         <a href="{{ $shopeeHref }}" title="Mở Shopee" aria-label="Mở Shopee" target="_blank" rel="noopener">
                             <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 30 30">
@@ -711,6 +742,14 @@
                             </svg>
                         </a>
                         @endif
+                    <a href="{{ route('cart.index') }}" class="cart-link" aria-label="Giỏ hàng">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="9" cy="20" r="1"></circle>
+                            <circle cx="17" cy="20" r="1"></circle>
+                            <path d="M3 4h2l2 12h11l2-8H6"></path>
+                        </svg>
+                        <span class="cart-count" data-cart-count>0</span>
+                    </a>
                 </div>
             </div>
         </div>
@@ -759,7 +798,11 @@
     </div>
     @endif
 
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js" defer></script>
+    <script src="{{ asset('js/app-toast.js') }}" defer></script>
+    <script src="{{ asset('js/shop.js') }}" defer></script>
     @stack('scripts')
 </body>
 
 </html>
+

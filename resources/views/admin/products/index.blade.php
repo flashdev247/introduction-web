@@ -45,7 +45,7 @@
                         <form method="post" action="{{ route('admin.products.destroy',$product) }}" style="display:inline">
                             @csrf
                             @method('DELETE')
-                            <button class="btn btn-sm btn-danger" onclick="return confirm('Xóa sản phẩm này?')">
+                            <button class="btn btn-sm btn-danger" data-confirm-message="Xóa sản phẩm này?">
                                 <i class="fas fa-trash"></i> Xóa
                             </button>
                         </form>
