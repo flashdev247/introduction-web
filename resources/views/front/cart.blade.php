@@ -51,19 +51,25 @@
     }
 
     .invoice-toggle {
-        display: inline-flex;
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
         align-items: center;
         gap: 10px;
-        width: auto;
-        max-width: 100%;
+        width: 100%;
         margin: 0;
         font-size: 15px;
         font-weight: 700;
-        white-space: nowrap;
     }
 
     .invoice-toggle input {
         flex: 0 0 auto;
+    }
+
+    .invoice-toggle span {
+        min-width: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .invoice-grid {
@@ -191,8 +197,8 @@
             grid-template-columns: 1fr;
         }
 
-        .invoice-toggle {
-            white-space: normal;
+        .invoice-toggle span {
+            font-size: 14px;
         }
     }
 </style>

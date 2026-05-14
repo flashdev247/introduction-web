@@ -127,12 +127,13 @@
       itemsWrap.innerHTML = "";
 
       cart.forEach((item) => {
+        const isMobile = window.matchMedia("(max-width: 640px)").matches;
         const row = document.createElement("div");
         row.style.border = "1px solid var(--line)";
         row.style.borderRadius = "8px";
         row.style.padding = "12px";
         row.style.display = "grid";
-        row.style.gridTemplateColumns = "76px minmax(0, 1fr) auto";
+        row.style.gridTemplateColumns = isMobile ? "76px minmax(0, 1fr)" : "76px minmax(0, 1fr) auto";
         row.style.gap = "14px";
         row.style.alignItems = "center";
         row.style.background = "#fff";
@@ -149,6 +150,12 @@
             <button type="button" class="btn btn-outline" data-action="remove" style="height:34px; min-width:34px; padding:0; border-radius:4px;">x</button>
           </div>
         `;
+        if (isMobile) {
+          const qtyControls = row.querySelector("div:last-child");
+          qtyControls.style.gridColumn = "2";
+          qtyControls.style.justifySelf = "start";
+          qtyControls.style.marginTop = "-6px";
+        }
         row.querySelector('[data-action="decrease"]').addEventListener("click", () => {
           const next = getCart().map((x) => x.id === item.id ? { ...x, quantity: Math.max(1, x.quantity - 1) } : x);
           setCart(next); refreshHeaderCartCount(); render();

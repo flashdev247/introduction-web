@@ -51,13 +51,21 @@
     }
 
     .checkout-invoice-toggle {
-        display: inline-flex;
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
         align-items: center;
         gap: 10px;
+        width: 100%;
         margin: 0;
         font-size: 15px;
         font-weight: 700;
+    }
+
+    .checkout-invoice-toggle span {
+        min-width: 0;
         white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .checkout-invoice-grid {
@@ -150,8 +158,8 @@
             grid-template-columns: 1fr;
         }
 
-        .checkout-invoice-toggle {
-            white-space: normal;
+        .checkout-invoice-toggle span {
+            font-size: 14px;
         }
     }
 </style>
