@@ -136,6 +136,26 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: relative;
+            z-index: 1100;
+        }
+
+        .mobile-toggle {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background: white;
+            color: #1a202c;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .mobile-toggle:hover {
+            background: #f7fafc;
         }
 
         .header-left h1 {
@@ -502,21 +522,40 @@
             color: #a0aec0;
         }
 
+        .sidebar-overlay {
+            display: none;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .sidebar {
-                width: 0;
-                padding: 0;
+                width: 280px;
+                transform: translateX(-100%);
                 transition: all 0.3s ease;
                 z-index: 1000;
             }
 
             .sidebar.active {
-                width: 280px;
+                transform: translateX(0);
+                padding: 24px 16px;
             }
 
             .main-content {
                 margin-left: 0;
+            }
+
+            .admin-header {
+                padding: 12px 16px;
+                gap: 12px;
+            }
+
+            .mobile-toggle {
+                display: inline-flex;
+                flex-shrink: 0;
+            }
+
+            .header-left h1 {
+                font-size: 20px;
             }
 
             .content-area {
@@ -556,6 +595,22 @@
                 padding: 0 10px;
                 font-size: 13px;
             }
+
+            .sidebar-overlay {
+                display: block;
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.4);
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+                z-index: 900;
+            }
+
+            .sidebar-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
         }
     </style>
 </head>
@@ -563,7 +618,7 @@
 <body>
     <div class="app-container">
         <!-- Sidebar -->
-        <aside class="sidebar">
+        <aside class="sidebar" id="adminSidebar">
             <div class="sidebar-header">
                 <i class="fas fa-layer-group"></i>
                 <h2>Trang quản trị</h2>
@@ -624,11 +679,15 @@
                 </form>
             </div>
         </aside>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
         <!-- Main Content -->
         <div class="main-content">
             <!-- Header -->
             <header class="admin-header">
+                <button type="button" class="mobile-toggle" id="sidebarToggle" aria-label="Mo menu quan tri">
+                    <i class="fas fa-bars"></i>
+                </button>
                 <div class="header-left">
                     <h1>@yield('header_title', 'Bảng điều khiển')</h1>
                 </div>
@@ -660,6 +719,31 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/toastify-js" defer></script>
     <script src="{{ asset('js/app-toast.js') }}" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('adminSidebar');
+            const toggleBtn = document.getElementById('sidebarToggle');
+            const overlay = document.getElementById('sidebarOverlay');
+
+            if (!sidebar || !toggleBtn || !overlay) return;
+
+            const closeSidebar = () => {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            };
+
+            toggleBtn.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+
+            overlay.addEventListener('click', closeSidebar);
+
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) closeSidebar();
+            });
+        });
+    </script>
 </body>
 
 </html>
