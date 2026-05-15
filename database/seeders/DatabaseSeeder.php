@@ -13,6 +13,9 @@ class DatabaseSeeder extends Seeder
         $this->call([
             AdminUserSeeder::class,
             UpdateContactSettingsSeeder::class,
+            CategorySeeder::class,
+            ProductSeeder::class,
+            ContactMessageSeeder::class,
         ]);
     }
 }
