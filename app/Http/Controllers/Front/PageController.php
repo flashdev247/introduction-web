@@ -28,7 +28,7 @@ class PageController extends Controller
     public function home()
     {
         $settings = $this->getSettings();
-        $featuredProducts = Product::where('is_active', true)->where('is_featured', true)->latest()->simplePaginate(6);
+        $featuredProducts = Product::where('is_active', true)->where('is_featured', true)->latest()->simplePaginate(8);
 
         return view('front.home', compact('settings', 'featuredProducts'));
     }
