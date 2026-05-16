@@ -12,7 +12,7 @@
 <form method="get" action="{{ route('admin.products.index') }}" class="card order-filter-form">
     <div class="order-filter-field">
         <label for="product-search">Tên hoặc mô tả</label>
-        <input id="product-search" type="text" name="q" value="{{ $search ?? request('q') }}" placeholder="Tìm kiếm sản phẩm...">
+        <input id="product-search" type="text" name="q" value="{{ $search }}" placeholder="Tìm kiếm sản phẩm...">
     </div>
     <div class="order-filter-actions">
         <button type="submit" class="btn">

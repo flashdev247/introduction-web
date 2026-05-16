@@ -19,7 +19,7 @@
             <input
                 type="text"
                 name="q"
-                value="{{ $search ?? request('q') }}"
+                value="{{ $search }}"
                 placeholder="Tìm kiếm sản phẩm..."
                 style="max-width:360px; width:100%;"
             >
