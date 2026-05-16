@@ -17,5 +17,8 @@
         @if($product->formatted_price)
         <p class="product-card__price">{{ $product->formatted_price }}</p>
         @endif
+        @if(!$product->is_active)
+        <p style="color:#c53030; font-weight:600;">Hết hàng</p>
+        @endif
     </div>
 </article>
