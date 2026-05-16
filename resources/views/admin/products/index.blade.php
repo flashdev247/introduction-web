@@ -84,4 +84,10 @@
     {{ $products->links() }}
 </div>
 @endif
+
+<style>
+    .order-filter-actions {
+        margin-top: 12px;
+    }
+</style>
 @endsection
