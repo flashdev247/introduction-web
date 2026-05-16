@@ -6,29 +6,38 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $search = trim((string) $request->query('q', ''));
+        $productsQuery = Product::with('category')->latest();
+
+        if ($search !== '') {
+            $productsQuery->where(function ($builder) use ($search) {
+                $builder->where('name', 'like', '%'.$search.'%')
+                    ->orWhere('description', 'like', '%'.$search.'%');
+            });
+        }
+
         return view('admin.products.index', [
-            'products' => Product::with('category')
-                ->latest()
+            'products' => $productsQuery
                 ->paginate(15)
                 ->withQueryString(),
+            'search' => $search,
         ]);
     }
 
     public function create()
     {
-        return view('admin.products.form', ['product' => new Product(), 'categories' => Category::orderBy('name')->get()]);
+        return view('admin.products.form', ['product' => new Product, 'categories' => Category::orderBy('name')->get()]);
     }
 
     public function store(Request $request)
     {
         Product::create($this->validated($request));
+
         return redirect()->route('admin.products.index')->with('success', 'Product created.');
     }
 
@@ -40,12 +49,14 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         $product->update($this->validated($request));
+
         return redirect()->route('admin.products.index')->with('success', 'Product updated.');
     }
 
     public function destroy(Product $product)
     {
         $product->delete();
+
         return back()->with('success', 'Product deleted.');
     }
 
@@ -72,7 +83,7 @@ class ProductController extends Controller
             foreach ($request->file('images_upload') as $file) {
                 if ($file->isValid()) {
                     $path = $file->store('products', 'public');
-                    $images[] = '/storage/' . $path;
+                    $images[] = '/storage/'.$path;
                 }
             }
         }

@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Front;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\ContactMessage;
-use App\Models\Setting;
 use App\Models\Product;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 
 class PageController extends Controller
@@ -37,11 +37,20 @@ class PageController extends Controller
     {
         $settings = $this->getSettings();
         $categoryId = $request->query('category');
-        $query = Product::with('category')->where('is_active', true)->latest();
+        $search = trim((string) $request->query('q', ''));
+        $query = Product::with('category')->latest();
 
         if ($categoryId) {
             $query->where('category_id', $categoryId);
         }
+
+        if ($search !== '') {
+            $query->where(function ($builder) use ($search) {
+                $builder->where('name', 'like', '%'.$search.'%')
+                    ->orWhere('description', 'like', '%'.$search.'%');
+            });
+        }
+
         $products = $query->paginate(12)->withQueryString();
         $categories = Category::all();
         $currentCategory = null;
@@ -50,7 +59,7 @@ class PageController extends Controller
             $currentCategory = Category::find($categoryId);
         }
 
-        return view('front.products', compact('settings', 'products', 'categories', 'currentCategory'));
+        return view('front.products', compact('settings', 'products', 'categories', 'currentCategory', 'search'));
     }
 
     // removed combined slug handler; categories are filtered via query params
@@ -63,7 +72,8 @@ class PageController extends Controller
     public function productDetail(int $id)
     {
         $settings = $this->getSettings();
-        $product = Product::with('category')->where('id', $id)->where('is_active', true)->firstOrFail();
+        $product = Product::with('category')->where('id', $id)->firstOrFail();
+
         return view('front.product-detail', compact('settings', 'product'));
     }
 

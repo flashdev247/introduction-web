@@ -9,6 +9,21 @@
     </a>
 </div>
 
+<form method="get" action="{{ route('admin.products.index') }}" class="card order-filter-form">
+    <div class="order-filter-field">
+        <label for="product-search">Tên hoặc mô tả</label>
+        <input id="product-search" type="text" name="q" value="{{ $search }}" placeholder="Tìm kiếm sản phẩm...">
+    </div>
+    <div class="order-filter-actions">
+        <button type="submit" class="btn">
+            <i class="fas fa-search"></i> Tìm kiếm
+        </button>
+        @if(request('q'))
+        <a class="btn btn-light" href="{{ route('admin.products.index') }}">Xóa lọc</a>
+        @endif
+    </div>
+</form>
+
 <div class="table-wrapper">
     <table>
         <thead>
@@ -33,7 +48,7 @@
                     </span>
                     @else
                     <span style="background: #fed7d7; color: #742a2a; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500;">
-                        <i class="fas fa-times"></i> Ngừng hoạt động
+                        <i class="fas fa-times"></i> Hết hàng
                     </span>
                     @endif
                 </td>

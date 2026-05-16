@@ -1,0 +1,55 @@
+name: Deploy master to Server
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    name: Deploy master via SSH
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to master server via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.MASTER_SSH_HOST }}
+          username: ${{ secrets.MASTER_SSH_USER }}
+          port: ${{ secrets.MASTER_SSH_PORT }}
+          key: ${{ secrets.MASTER_SSH_PRIVATE_KEY }}
+          script: |
+            set -e
+
+            cd "${{ secrets.MASTER_SERVER_PROJECT_PATH }}"
+
+            git pull --ff-only origin master
+
+            composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
+
+            PUBLIC_PATH="${{ secrets.MASTER_SERVER_PUBLIC_PATH }}"
+            if [ -z "$PUBLIC_PATH" ]; then
+              echo "Missing MASTER_SERVER_PUBLIC_PATH secret" >&2
+              exit 1
+            fi
+
+            php artisan down || true
+            trap 'php artisan up || true' EXIT
+
+            php artisan migrate --force
+            php artisan storage:link || true
+            php artisan optimize:clear
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
+
+            mkdir -p "$PUBLIC_PATH"
+            rsync -a --delete \
+              --exclude='index.php' \
+              --exclude='storage' \
+              public/ "$PUBLIC_PATH"/
+
+            php artisan up
+            trap - EXIT
+
+            echo "Master deploy completed at $(date)"

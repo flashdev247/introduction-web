@@ -35,11 +35,15 @@
             @if($product->formatted_price)
             <p class="detail-price">{{ $product->formatted_price }}</p>
             @endif
+            @if(!$product->is_active)
+            <p style="color:#c53030; font-weight:600;">Hết hàng</p>
+            @endif
             @if($product->description)
             <div class="content" style="margin-top:18px; color: #2d3748; line-height:1.7;">
                 {!! $product->description !!}
             </div>
             @endif
+            @if($product->is_active)
             <div style="margin-top:20px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;" data-product-purchase
                 data-product-id="{{ $product->id }}"
                 data-product-name="{{ $product->name }}"
@@ -50,6 +54,7 @@
                 <button type="button" class="btn btn-outline" data-qty-plus>+</button>
                 <button type="button" class="btn" data-add-to-cart>Thêm vào giỏ hàng</button>
             </div>
+            @endif
         </div>
     </div>
 </section>
